@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.aldikitta.crudnoteapp.feature_note.data.data_source.NoteDatabase
 import com.aldikitta.crudnoteapp.feature_note.data.repository.NoteRepositoryImpl
 import com.aldikitta.crudnoteapp.feature_note.domain.repository.NoteRepository
+import com.aldikitta.crudnoteapp.feature_note.domain.use_case.AddNoteUseCase
 import com.aldikitta.crudnoteapp.feature_note.domain.use_case.DeleteNotesUseCase
 import com.aldikitta.crudnoteapp.feature_note.domain.use_case.GetNotesUseCase
 import com.aldikitta.crudnoteapp.feature_note.domain.use_case.NoteUseCases
@@ -39,7 +40,8 @@ object FeatureNoteModule {
     fun provideNoteUseCases(repository: NoteRepository): NoteUseCases {
         return NoteUseCases(
             getNotes = GetNotesUseCase(repository),
-            deleteNotes = DeleteNotesUseCase(repository)
+            deleteNotes = DeleteNotesUseCase(repository),
+            addNote = AddNoteUseCase(repository)
         )
     }
 }
