@@ -5,10 +5,7 @@ import androidx.room.Room
 import com.aldikitta.crudnoteapp.feature_note.data.data_source.NoteDatabase
 import com.aldikitta.crudnoteapp.feature_note.data.repository.NoteRepositoryImpl
 import com.aldikitta.crudnoteapp.feature_note.domain.repository.NoteRepository
-import com.aldikitta.crudnoteapp.feature_note.domain.use_case.AddNoteUseCase
-import com.aldikitta.crudnoteapp.feature_note.domain.use_case.DeleteNotesUseCase
-import com.aldikitta.crudnoteapp.feature_note.domain.use_case.GetNotesUseCase
-import com.aldikitta.crudnoteapp.feature_note.domain.use_case.NoteUseCases
+import com.aldikitta.crudnoteapp.feature_note.domain.use_case.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,7 +38,8 @@ object FeatureNoteModule {
         return NoteUseCases(
             getNotes = GetNotesUseCase(repository),
             deleteNotes = DeleteNotesUseCase(repository),
-            addNote = AddNoteUseCase(repository)
+            addNote = AddNoteUseCase(repository),
+            getNoteByIdUseCase = GetNoteByIdUseCase(repository)
         )
     }
 }
