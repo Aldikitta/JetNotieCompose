@@ -10,6 +10,8 @@ import com.aldikitta.crudnoteapp.feature_note.domain.util.NoteOrder
 import com.aldikitta.crudnoteapp.feature_note.domain.util.OrderType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -19,8 +21,8 @@ import javax.inject.Inject
 class NotesViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases
 ) : ViewModel() {
-    private val _state = mutableStateOf(NotesUiState())
-    val state: State<NotesUiState> = _state
+    private val _state = MutableStateFlow(NotesUiState())
+    val state: StateFlow<NotesUiState> = _state
 
     private var recentlyDeleteNote: Note? = null
     private var getNotesJob: Job? = null
