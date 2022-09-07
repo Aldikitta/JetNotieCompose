@@ -90,21 +90,21 @@ fun NotesScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+            LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
                 items(state.notes) { note ->
                     NoteItem(
                         note = note,
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-//                            navController.navigate(
-//                                Screen.AddEditNoteScreen.route +
-//                                        "?noteId=${note.id}&noteColor=${note.color}"
-//                            )
+                            navController.navigate(
+                                Screen.AddEditNoteScreen.route +
+                                        "?noteId=${note.id}&noteColor=${note.color}"
+                            )
                             },
-                        onnDeleteClick = {
+                        onDeleteClick = {
                             viewModel.onEvent(NotesEvent.DeleteNote(note))
-//                            scope.launch {
+                            scope.launch {
 //                                val result = scaffoldState.snackbarHostState.showSnackbar(
 //                                    message = "Note deleted",
 //                                    actionLabel = "Undo"
@@ -112,7 +112,7 @@ fun NotesScreen(
 //                                if(result == SnackbarResult.ActionPerformed) {
 //                                    viewModel.onEvent(NotesEvent.RestoreNote)
 //                                }
-//                            }
+                            }
                         }
                     )
                 }
