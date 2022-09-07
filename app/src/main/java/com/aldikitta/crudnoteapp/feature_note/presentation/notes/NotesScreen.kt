@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import com.aldikitta.crudnoteapp.feature_note.domain.util.NoteOrder
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.NoteItem
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.OrderSection
+import com.aldikitta.crudnoteapp.feature_note.presentation.util.Screen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,7 +66,9 @@ fun NotesScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /*TODO*/ }
+                onClick = {
+                    navController.navigate(Screen.AddEditNoteScreen.route)
+                }
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,

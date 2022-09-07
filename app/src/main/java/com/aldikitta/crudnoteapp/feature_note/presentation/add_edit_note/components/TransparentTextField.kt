@@ -19,7 +19,8 @@ fun TransparentTextField(
     modifier: Modifier = Modifier,
     isHintVisible: Boolean = true,
     onValueChange: (String) -> Unit,
-    onFocusChange: (FocusState) -> Unit
+    onFocusChange: (FocusState) -> Unit,
+    singleline: Boolean = false
 ) {
     Box(modifier = modifier) {
         TextField(
@@ -32,7 +33,8 @@ fun TransparentTextField(
                 if (isHintVisible){
                     Text(text = hint)
                 }
-            }
+            },
+            singleLine = singleline
         )
     }
 }
