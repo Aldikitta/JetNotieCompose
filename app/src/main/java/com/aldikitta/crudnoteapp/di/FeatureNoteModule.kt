@@ -39,7 +39,8 @@ object FeatureNoteModule {
             getNotes = GetNotesUseCase(repository),
             deleteNotes = DeleteNotesUseCase(repository),
             addNote = AddNoteUseCase(repository),
-            getNoteByIdUseCase = GetNoteByIdUseCase(repository)
+            getNoteByIdUseCase = GetNoteByIdUseCase(repository),
+            searchNoteUseCase = SearchNoteUseCase(repository)
         )
     }
 }

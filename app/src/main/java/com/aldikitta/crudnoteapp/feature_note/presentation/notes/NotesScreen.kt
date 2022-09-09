@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -64,7 +65,9 @@ fun NotesScreen(
                             )
                         }
                     }
-
+                    IconButton(onClick = { navController.navigate(Screen.SearchScreen.route) }) {
+                        Icon(imageVector = Icons.Filled.Search, contentDescription = null)
+                    }
                 }
             )
         },
@@ -94,9 +97,11 @@ fun NotesScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            LazyColumn(modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
                 items(state.notes) { note ->
                     NoteItem(
                         note = note,

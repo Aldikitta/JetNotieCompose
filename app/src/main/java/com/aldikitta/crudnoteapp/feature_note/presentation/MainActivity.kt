@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.aldikitta.crudnoteapp.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesScreen
+import com.aldikitta.crudnoteapp.feature_note.presentation.search.SearchScreen
 import com.aldikitta.crudnoteapp.feature_note.presentation.util.Screen
 import com.aldikitta.crudnoteapp.ui.theme.CRUDNoteAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,6 +64,9 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                                 noteColor = color
                             )
+                        }
+                        composable(route = Screen.SearchScreen.route) {
+                            SearchScreen(navController = navController)
                         }
                     }
                 }
