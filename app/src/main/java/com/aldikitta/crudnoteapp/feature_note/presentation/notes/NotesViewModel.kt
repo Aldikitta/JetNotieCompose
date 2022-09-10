@@ -1,7 +1,9 @@
 package com.aldikitta.crudnoteapp.feature_note.presentation.notes
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aldikitta.crudnoteapp.feature_note.domain.model.Note
@@ -24,8 +26,12 @@ class NotesViewModel @Inject constructor(
     private val _state = MutableStateFlow(NotesUiState())
     val state: StateFlow<NotesUiState> = _state
 
+    var tasksUiState by mutableStateOf(NotesUiState())
+        private set
+
     private var recentlyDeleteNote: Note? = null
     private var getNotesJob: Job? = null
+    private var searchTasksJob: Job? = null
 
     init {
         getNotes(NoteOrder.Date(OrderType.Descending))
@@ -40,6 +46,11 @@ class NotesViewModel @Inject constructor(
                     return
                 }
                 getNotes(event.noteOrder)
+            }
+            is NotesEvent.SearchNotes -> {
+                viewModelScope.launch {
+                    searchNoteImpl(event.query)
+                }
             }
             is NotesEvent.DeleteNote -> {
                 viewModelScope.launch {
@@ -71,5 +82,14 @@ class NotesViewModel @Inject constructor(
                 )
             }
             .launchIn(viewModelScope)
+    }
+
+    private suspend fun searchNoteImpl(searchQuery: String){
+        searchTasksJob?.cancel()
+        searchTasksJob = noteUseCases.searchNoteUseCase(searchQuery).onEach { notes ->
+            tasksUiState = tasksUiState.copy(
+                notes = notes
+            )
+        }.launchIn(viewModelScope)
     }
 }
