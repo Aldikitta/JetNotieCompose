@@ -87,7 +87,7 @@ fun NotesScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            NoteItemGrid(state = state, paddingValues = innerPadding)
+            NoteItemGrid(state = state, paddingValues = innerPadding, navController = navController)
         }
     }
 }

@@ -43,6 +43,6 @@ fun SearchScreen(
                 .padding(16.dp)
                 .focusRequester(focusRequester)
         )
-        NoteItemGrid(state = state, paddingValues = PaddingValues())
+        NoteItemGrid(state = state, paddingValues = PaddingValues(), navController)
     }
 }

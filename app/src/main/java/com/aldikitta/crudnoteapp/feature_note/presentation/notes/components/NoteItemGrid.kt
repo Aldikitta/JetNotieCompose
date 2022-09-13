@@ -1,4 +1,5 @@
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -14,7 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesUiState
+import com.aldikitta.crudnoteapp.feature_note.presentation.util.Screen
 import com.aldikitta.crudnoteapp.ui.theme.spacing
 import java.text.SimpleDateFormat
 import java.util.*
@@ -23,13 +26,14 @@ import java.util.*
 @Composable
 fun NoteItemGrid(
     state: NotesUiState,
-    paddingValues: PaddingValues
-){
+    paddingValues: PaddingValues,
+    navController: NavController,
+) {
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .padding(paddingValues)
-    ){
+    ) {
         CustomStaggeredVerticalGrid(
             numColumns = 2,
         ) {
@@ -46,6 +50,12 @@ fun NoteItemGrid(
                             .fillMaxWidth()
                             .padding(MaterialTheme.spacing.small)
 //                                    .heightIn(min = 0.dp, max = 300.dp)
+                            .clickable {
+                                navController.navigate(
+                                    Screen.AddEditNoteScreen.route +
+                                            "?noteId=${note.id}&noteColor=${note.color}"
+                                )
+                            }
                     ) {
                         Column(
                             modifier = Modifier
@@ -86,6 +96,7 @@ fun NoteItemGrid(
         }
     }
 }
+
 @Composable
 fun CustomStaggeredVerticalGrid(
     // on below line we are specifying
