@@ -23,12 +23,12 @@ import java.util.*
 @Composable
 fun NoteItemGrid(
     state: NotesUiState,
-    paddingValues: PaddingValues?
+    paddingValues: PaddingValues
 ){
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
-            .padding(paddingValues!!)
+            .padding(paddingValues)
     ){
         CustomStaggeredVerticalGrid(
             numColumns = 2,
