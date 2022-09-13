@@ -38,7 +38,7 @@ import com.aldikitta.crudnoteapp.feature_note.presentation.util.Screen
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 
-private val MinToolbarHeight = 50.dp
+private val MinToolbarHeight = 80.dp
 private val MaxToolbarHeight = 176.dp
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLifecycleComposeApi::class)
 @Composable

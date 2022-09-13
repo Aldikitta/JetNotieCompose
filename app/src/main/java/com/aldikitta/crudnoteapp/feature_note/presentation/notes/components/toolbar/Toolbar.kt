@@ -18,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
@@ -41,53 +42,53 @@ private val CollapsedWildlifeHeight = 24.dp
 
 private val MapHeight = CollapsedCostaRicaHeight * 2
 
-@Preview
-@Composable
-fun CollapsingToolbarCollapsedPreview() {
-    CRUDNoteAppTheme {
-        CollapsingToolbar(
-            backgroundImageResId = R.drawable.toolbar_background,
-            progress = 0f,
-            onPrivacyTipButtonClicked = {},
-            onSettingsButtonClicked = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(80.dp)
-        )
-    }
-}
-
-@Preview
-@Composable
-fun CollapsingToolbarHalfwayPreview() {
-    CRUDNoteAppTheme {
-        CollapsingToolbar(
-            backgroundImageResId = R.drawable.toolbar_background,
-            progress = 0.5f,
-            onPrivacyTipButtonClicked = {},
-            onSettingsButtonClicked = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp)
-        )
-    }
-}
-
-@Preview
-@Composable
-fun CollapsingToolbarExpandedPreview() {
-    CRUDNoteAppTheme {
-        CollapsingToolbar(
-            backgroundImageResId = R.drawable.toolbar_background,
-            progress = 1f,
-            onPrivacyTipButtonClicked = {},
-            onSettingsButtonClicked = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(160.dp)
-        )
-    }
-}
+//@Preview
+//@Composable
+//fun CollapsingToolbarCollapsedPreview() {
+//    CRUDNoteAppTheme {
+//        CollapsingToolbar(
+//            backgroundImageResId = R.drawable.toolbar_background,
+//            progress = 0f,
+//            onPrivacyTipButtonClicked = {},
+//            onSettingsButtonClicked = {},
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(80.dp)
+//        )
+//    }
+//}
+//
+//@Preview
+//@Composable
+//fun CollapsingToolbarHalfwayPreview() {
+//    CRUDNoteAppTheme {
+//        CollapsingToolbar(
+//            backgroundImageResId = R.drawable.toolbar_background,
+//            progress = 0.5f,
+//            onPrivacyTipButtonClicked = {},
+//            onSettingsButtonClicked = {},
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(120.dp)
+//        )
+//    }
+//}
+//
+//@Preview
+//@Composable
+//fun CollapsingToolbarExpandedPreview() {
+//    CRUDNoteAppTheme {
+//        CollapsingToolbar(
+//            backgroundImageResId = R.drawable.toolbar_background,
+//            progress = 1f,
+//            onPrivacyTipButtonClicked = {},
+//            onSettingsButtonClicked = {},
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(160.dp)
+//        )
+//    }
+//}
 
 @Composable
 fun CollapsingToolbar(
@@ -108,23 +109,23 @@ fun CollapsingToolbar(
     }
 
     Surface(
-        color = MaterialTheme.colorScheme.primary,
+//        color = MaterialTheme.colorScheme.primary,
 //        elevation = Elevation,
         modifier = modifier
     ) {
-        Box (modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize()) {
             //#region Background Image
-            Image(
-                painter = painterResource(id = backgroundImageResId),
-                contentDescription = null,
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .graphicsLayer {
-                        alpha = progress * Alpha
-                    },
-                alignment = BiasAlignment(0f, 1f - ((1f - progress) * 0.75f))
-            )
+//            Image(
+//                painter = painterResource(id = backgroundImageResId),
+//                contentDescription = null,
+//                contentScale = ContentScale.FillWidth,
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .graphicsLayer {
+//                        alpha = progress * Alpha
+//                    },
+//                alignment = BiasAlignment(0f, 1f - ((1f - progress) * 0.75f))
+//            )
             //#endregion
             Box(
                 modifier = Modifier
@@ -132,7 +133,7 @@ fun CollapsingToolbar(
                     .padding(horizontal = ContentPadding)
                     .fillMaxSize()
             ) {
-                CollapsingToolbarLayout (progress = progress) {
+                CollapsingToolbarLayout(progress = progress) {
                     //#region Logo Images
                     Image(
                         painter = painterResource(id = R.drawable.logo_costa_rica_map),
@@ -144,36 +145,69 @@ fun CollapsingToolbar(
                             .graphicsLayer { alpha = ((0.25f - progress) * 4).coerceIn(0f, 1f) },
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
                     )
-                    Image(
-                        painter = painterResource(id = R.drawable.logo_costa),
-                        contentDescription = null,
+                    Text(
                         modifier = Modifier
-                            .padding(logoPadding)
-                            .height(costaRicaHeight)
+//                            .padding(logoPadding)
+//                            .height(costaRicaHeight)
                             .wrapContentWidth(),
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
+                        text = "Good Evening",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold
                     )
-                    Image(
-                        painter = painterResource(id = R.drawable.logo_rica),
-                        contentDescription = null,
+//                    Image(
+//                        painter = painterResource(id = R.drawable.logo_costa),
+//                        contentDescription = null,
+//                        modifier = Modifier
+//                            .padding(logoPadding)
+//                            .height(costaRicaHeight)
+//                            .wrapContentWidth(),
+//                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
+//                    )
+                    Text(
                         modifier = Modifier
-                            .padding(logoPadding)
-                            .height(costaRicaHeight)
+//                            .padding(logoPadding)
+//                            .height(costaRicaHeight)
                             .wrapContentWidth(),
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
+                        text = "You have 10 Notes",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Light
                     )
-                    Image(
-                        painter = painterResource(id = R.drawable.logo_wildlife),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(logoPadding)
-                            .height(wildlifeHeight)
-                            .wrapContentWidth(),
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
-                    )
+//                    Image(
+//                        painter = painterResource(id = R.drawable.logo_rica),
+//                        contentDescription = null,
+//                        modifier = Modifier
+//                            .padding(logoPadding)
+//                            .height(costaRicaHeight)
+//                            .wrapContentWidth(),
+//                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
+//                    )
+//                    Text(
+//                        modifier = Modifier
+//                            .padding(logoPadding)
+//                            .height(wildlifeHeight)
+//                            .graphicsLayer {
+//                                alpha = ((progress - 0.25f) * 4).coerceIn(
+//                                    minimumValue = 0f,
+//                                    maximumValue = 1f
+//                                )
+//                            }
+//                            .wrapContentWidth(),
+//                        text = "10 Notes",
+//                        style = MaterialTheme.typography.titleLarge,
+//                        fontWeight = FontWeight.Bold
+//                    )
+//                    Image(
+//                        painter = painterResource(id = R.drawable.logo_wildlife),
+//                        contentDescription = null,
+//                        modifier = Modifier
+//                            .padding(logoPadding)
+//                            .height(wildlifeHeight)
+//                            .wrapContentWidth(),
+//                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
+//                    )
                     //#endregion
                     //#region Buttons
-                    Row (
+                    Row(
                         modifier = Modifier.wrapContentSize(),
                         horizontalArrangement = Arrangement.spacedBy(ContentPadding)
                     ) {
@@ -225,7 +259,7 @@ private fun CollapsingToolbarLayout(
         modifier = modifier,
         content = content
     ) { measurables, constraints ->
-        check(measurables.size == 5) // [0]: Country Map | [1-3]: Logo Images | [4]: Buttons
+        check(measurables.size == 4) // [0]: Country Map | [1-3]: Logo Images | [4]: Buttons
 
         val placeables = measurables.map {
             it.measure(constraints)
@@ -241,8 +275,8 @@ private fun CollapsingToolbarLayout(
             val countryMap = placeables[0]
             val costa = placeables[1]
             val rica = placeables[2]
-            val wildlife = placeables[3]
-            val buttons = placeables[4]
+//            val wildlife = placeables[3]
+            val buttons = placeables[3]
             countryMap.placeRelative(
                 x = 0,
                 y = collapsedHorizontalGuideline - countryMap.height / 2,
@@ -250,39 +284,39 @@ private fun CollapsingToolbarLayout(
             costa.placeRelative(
                 x = lerp(
                     start = countryMap.width,
-                    stop = constraints.maxWidth / 2 - costa.width,
+                    stop = 0,
                     fraction = progress
                 ),
                 y = lerp(
                     start = collapsedHorizontalGuideline - costa.height / 2,
-                    stop = expandedHorizontalGuideline - costa.height,
+                    stop = expandedHorizontalGuideline - costa.height /2,
                     fraction = progress
                 )
             )
             rica.placeRelative(
                 x = lerp(
                     start = countryMap.width + costa.width,
-                    stop = constraints.maxWidth / 2 - rica.width,
+                    stop = 0,
                     fraction = progress
                 ),
                 y = lerp(
                     start = collapsedHorizontalGuideline - rica.height / 2,
-                    stop = expandedHorizontalGuideline,
-                    fraction = progress
-                )
-            )
-            wildlife.placeRelative(
-                x = lerp(
-                    start = countryMap.width + costa.width + rica.width,
-                    stop = constraints.maxWidth / 2,
-                    fraction = progress
-                ),
-                y = lerp(
-                    start = collapsedHorizontalGuideline - wildlife.height / 2,
                     stop = expandedHorizontalGuideline + rica.height / 2,
                     fraction = progress
                 )
             )
+//            wildlife.placeRelative(
+//                x = lerp(
+//                    start = countryMap.width + costa.width + rica.width,
+//                    stop = constraints.maxWidth / 3,
+//                    fraction = progress
+//                ),
+//                y = lerp(
+//                    start = collapsedHorizontalGuideline - wildlife.height / 2,
+//                    stop = expandedHorizontalGuideline + rica.height,
+//                    fraction = progress
+//                )
+//            )
             buttons.placeRelative(
                 x = constraints.maxWidth - buttons.width,
                 y = lerp(
