@@ -1,8 +1,7 @@
 package com.aldikitta.crudnoteapp.feature_note.presentation.add_edit_note
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -99,7 +98,7 @@ class AddEditNoteViewModel @Inject constructor(
                                 content = noteContent.value.text,
                                 timeStamp = System.currentTimeMillis(),
                                 color = noteColor.value,
-                                id = currentNoteId
+                                id = currentNoteId,
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveNote)

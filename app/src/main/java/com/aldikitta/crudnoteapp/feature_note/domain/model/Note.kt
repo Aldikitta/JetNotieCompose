@@ -1,5 +1,7 @@
 package com.aldikitta.crudnoteapp.feature_note.domain.model
 
+import android.media.Image
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.aldikitta.crudnoteapp.ui.theme.*
@@ -11,9 +13,10 @@ data class Note(
     val content: String,
     val timeStamp: Long,
     val color: Int,
+//    val image: ImageVector.Companion?
 ) {
     companion object {
-        val noteColors = listOf(RedOrange, RedPink, BabyBlue, Violet, LightGreen)
+        val noteColors = listOf(RedOrange, RedPink, Violet, LightGreen)
     }
 }
 
