@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -34,11 +35,14 @@ fun SearchScreen(
         var query by rememberSaveable {
             mutableStateOf("")
         }
+
         LaunchedEffect(query) { viewModel.onEvent(NotesEvent.SearchNotes(query)) }
         val focusRequester = remember { FocusRequester() }
         LaunchedEffect(true) { focusRequester.requestFocus() }
         Row(
-            modifier = Modifier.fillMaxWidth().statusBarsPadding(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .statusBarsPadding(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
@@ -60,7 +64,15 @@ fun SearchScreen(
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent
                 ),
-                shape = RoundedCornerShape(MaterialTheme.spacing.medium)
+                shape = RoundedCornerShape(MaterialTheme.spacing.medium),
+
+                trailingIcon = {
+                    if (query.isNotEmpty()) {
+                        IconButton(onClick = { query = "" }) {
+                            Icon(imageVector = Icons.Filled.Close, contentDescription = "close")
+                        }
+                    }
+                }
             )
         }
         NoteItemGrid(
