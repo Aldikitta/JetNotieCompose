@@ -49,12 +49,13 @@ fun NoteItemGrid(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(MaterialTheme.spacing.small)
-//                                    .heightIn(min = 0.dp, max = 300.dp)
                             .clickable {
                                 navController.navigate(
                                     Screen.AddEditNoteScreen.route +
                                             "?noteId=${note.id}&noteColor=${note.color}"
-                                )
+                                ){
+
+                                }
                             }
                     ) {
                         Column(
@@ -62,8 +63,6 @@ fun NoteItemGrid(
                                 .fillMaxSize()
                                 .background(MaterialTheme.colorScheme.inverseOnSurface)
                                 .padding(MaterialTheme.spacing.small)
-//                                    .align(Alignment.CenterHorizontally),
-//                                horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Row(
                                 horizontalArrangement = Arrangement.SpaceBetween,

@@ -24,6 +24,6 @@ interface NoteDao {
 //    @Query("SELECT * FROM note WHERE title LIKE :searchQuery OR content LIKE :searchQuery")
 //    fun searchNote(searchQuery: String): Flow<List<Note>>
 
-    @Query("SELECT * FROM note WHERE title LIKE '%' || :searchQuery || '%'")
+    @Query("SELECT * FROM note WHERE title LIKE '%' || :searchQuery || '%' OR content LIKE '%' || :searchQuery || '%' ORDER BY timeStamp DESC")
     fun searchNote(searchQuery: String): Flow<List<Note>>
 }
