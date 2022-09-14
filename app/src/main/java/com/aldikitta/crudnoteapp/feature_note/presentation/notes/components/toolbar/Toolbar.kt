@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.rounded.PrivacyTip
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.*
@@ -135,15 +136,14 @@ fun CollapsingToolbar(
             ) {
                 CollapsingToolbarLayout(progress = progress) {
                     //#region Logo Images
-                    Image(
-                        painter = painterResource(id = R.drawable.logo_costa_rica_map),
+                    Icon(
+                        imageVector = Icons.Filled.Face,
                         contentDescription = null,
                         modifier = Modifier
                             .padding(logoPadding)
                             .height(MapHeight)
                             .wrapContentWidth()
                             .graphicsLayer { alpha = ((0.25f - progress) * 4).coerceIn(0f, 1f) },
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
                     )
                     Text(
                         modifier = Modifier
@@ -192,19 +192,18 @@ fun CollapsingToolbar(
 //                                )
 //                            }
 //                            .wrapContentWidth(),
-//                        text = "10 Notes",
+//                        text = "",
 //                        style = MaterialTheme.typography.titleLarge,
 //                        fontWeight = FontWeight.Bold
 //                    )
-//                    Image(
-//                        painter = painterResource(id = R.drawable.logo_wildlife),
-//                        contentDescription = null,
-//                        modifier = Modifier
-//                            .padding(logoPadding)
-//                            .height(wildlifeHeight)
-//                            .wrapContentWidth(),
-//                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
-//                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.icon_note),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(logoPadding)
+                            .height(wildlifeHeight)
+                            .wrapContentWidth(),
+                    )
                     //#endregion
                     //#region Buttons
                     Row(
@@ -259,7 +258,7 @@ private fun CollapsingToolbarLayout(
         modifier = modifier,
         content = content
     ) { measurables, constraints ->
-        check(measurables.size == 4) // [0]: Country Map | [1-3]: Logo Images | [4]: Buttons
+        check(measurables.size == 5) // [0]: Country Map | [1-3]: Logo Images | [4]: Buttons
 
         val placeables = measurables.map {
             it.measure(constraints)
@@ -275,8 +274,8 @@ private fun CollapsingToolbarLayout(
             val countryMap = placeables[0]
             val costa = placeables[1]
             val rica = placeables[2]
-//            val wildlife = placeables[3]
-            val buttons = placeables[3]
+            val wildlife = placeables[3]
+            val buttons = placeables[4]
             countryMap.placeRelative(
                 x = 0,
                 y = collapsedHorizontalGuideline - countryMap.height / 2,
@@ -305,18 +304,18 @@ private fun CollapsingToolbarLayout(
                     fraction = progress
                 )
             )
-//            wildlife.placeRelative(
-//                x = lerp(
-//                    start = countryMap.width + costa.width + rica.width,
-//                    stop = constraints.maxWidth / 3,
-//                    fraction = progress
-//                ),
-//                y = lerp(
-//                    start = collapsedHorizontalGuideline - wildlife.height / 2,
-//                    stop = expandedHorizontalGuideline + rica.height,
-//                    fraction = progress
-//                )
-//            )
+            wildlife.placeRelative(
+                x = lerp(
+                    start = countryMap.width + costa.width + rica.width,
+                    stop = constraints.maxWidth / 3,
+                    fraction = progress
+                ),
+                y = lerp(
+                    start = collapsedHorizontalGuideline - wildlife.height / 2,
+                    stop = expandedHorizontalGuideline + rica.height,
+                    fraction = progress
+                )
+            )
             buttons.placeRelative(
                 x = constraints.maxWidth - buttons.width,
                 y = lerp(
