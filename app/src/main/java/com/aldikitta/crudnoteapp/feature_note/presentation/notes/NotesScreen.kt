@@ -39,7 +39,7 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 
 private val MinToolbarHeight = 80.dp
-private val MaxToolbarHeight = 176.dp
+private val MaxToolbarHeight = 230.dp
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLifecycleComposeApi::class)
 @Composable
 fun NotesScreen(
@@ -88,7 +88,7 @@ fun NotesScreen(
         modifier = Modifier.nestedScroll(nestedScrollConnection),
         topBar = {
             CollapsingToolbar(
-                backgroundImageResId = com.aldikitta.crudnoteapp.R.drawable.toolbar_background,
+//                backgroundImageResId = com.aldikitta.crudnoteapp.R.drawable.toolbar_background,
                 progress = toolbarState.progress,
                 onPrivacyTipButtonClicked = {},
                 onSettingsButtonClicked = {},

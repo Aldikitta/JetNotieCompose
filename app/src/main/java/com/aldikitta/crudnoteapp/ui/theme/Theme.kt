@@ -10,6 +10,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -57,11 +58,11 @@ fun CRUDNoteAppTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val activity  = view.context as Activity
-            (activity).window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(activity.window, view).isAppearanceLightStatusBars = darkTheme
-//            activity.window.navigationBarColor = colorScheme.primary.copy(alpha = 0.08f).compositeOver(colorScheme.surface.copy()).toArgb()
+            (activity).window.statusBarColor = colorScheme.background.toArgb()
+            WindowCompat.getInsetsController(activity.window, view).isAppearanceLightStatusBars = !darkTheme
+            activity.window.navigationBarColor = colorScheme.primary.copy(alpha = 0.08f).compositeOver(colorScheme.surface.copy()).toArgb()
 //            activity.window.statusBarColor = colorScheme.background.toArgb()
-//            WindowCompat.getInsetsController(activity.window, view).isAppearanceLightNavigationBars = !darkTheme
+            WindowCompat.getInsetsController(activity.window, view).isAppearanceLightNavigationBars = !darkTheme
         }
     }
 

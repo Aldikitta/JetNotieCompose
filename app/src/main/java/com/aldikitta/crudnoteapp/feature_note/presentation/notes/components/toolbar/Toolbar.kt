@@ -1,30 +1,33 @@
 package com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.toolbar
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.rounded.PrivacyTip
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import com.aldikitta.crudnoteapp.R
-import com.aldikitta.crudnoteapp.ui.theme.CRUDNoteAppTheme
+import com.aldikitta.crudnoteapp.ui.theme.*
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.roundToInt
 
 private val ContentPadding = 8.dp
@@ -38,8 +41,8 @@ private val CollapsedPadding = 3.dp
 private val ExpandedCostaRicaHeight = 20.dp
 private val CollapsedCostaRicaHeight = 16.dp
 
-private val ExpandedWildlifeHeight = 32.dp
-private val CollapsedWildlifeHeight = 24.dp
+private val ExpandedWildlifeHeight = 80.dp
+private val CollapsedWildlifeHeight = 75.dp
 
 private val MapHeight = CollapsedCostaRicaHeight * 2
 
@@ -93,7 +96,7 @@ private val MapHeight = CollapsedCostaRicaHeight * 2
 
 @Composable
 fun CollapsingToolbar(
-    @DrawableRes backgroundImageResId: Int,
+//    @DrawableRes backgroundImageResId: Int,
     progress: Float,
     onPrivacyTipButtonClicked: () -> Unit,
     onSettingsButtonClicked: () -> Unit,
@@ -109,15 +112,51 @@ fun CollapsingToolbar(
         lerp(CollapsedPadding.toPx(), ExpandedPadding.toPx(), progress).toDp()
     }
 
+    val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+    val currentHour1 = Calendar.getInstance().get(Calendar.FRIDAY)
+    val day = SimpleDateFormat("EEE")
+    val month = SimpleDateFormat("MMM d")
+
+    val dayOfWeek = day.format(Date())
+    val dayOfMonth = month.format(Date())
+
+
     Surface(
 //        color = MaterialTheme.colorScheme.primary,
 //        elevation = Elevation,
         modifier = modifier
     ) {
+        // Creating a Vertical Gradient Color
+        val gradientGrayWhite = Brush.linearGradient(
+            colors = listOf(
+                MaterialTheme.colorScheme.primaryContainer.copy(alpha = progress * Alpha),
+                MaterialTheme.colorScheme.primary.copy(alpha = progress * Alpha)
+            ),
+            tileMode = TileMode.Clamp,
+            start = Offset(0f, Float.POSITIVE_INFINITY),
+            end = Offset(Float.POSITIVE_INFINITY, 0f)
+        )
+
         Box(modifier = Modifier.fillMaxSize()) {
             //#region Background Image
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(shape = RoundedCornerShape(MaterialTheme.spacing.small))
+                    .background(gradientGrayWhite)
+
+            )
+
+//            FeatureItem(
+//                modifier = modifier
+//                    .fillMaxSize(),
+//                darkColor = BlueViolet3.copy(alpha = progress * Alpha),
+//                mediumColor = BlueViolet2.copy(alpha = progress * Alpha),
+//                lightColor = BlueViolet1.copy(alpha = progress * Alpha),
+//
+//                )
 //            Image(
-//                painter = painterResource(id = backgroundImageResId),
+//                painter = painterResource(id = R.drawable.toolbar_background),
 //                contentDescription = null,
 //                contentScale = ContentScale.FillWidth,
 //                modifier = Modifier
@@ -136,22 +175,39 @@ fun CollapsingToolbar(
             ) {
                 CollapsingToolbarLayout(progress = progress) {
                     //#region Logo Images
-                    Icon(
-                        imageVector = Icons.Filled.Face,
-                        contentDescription = null,
+                    Text(
+                        text = "Notes",
                         modifier = Modifier
-                            .padding(logoPadding)
-                            .height(MapHeight)
+//                            .padding(logoPadding)
+//                            .height(MapHeight)
                             .wrapContentWidth()
                             .graphicsLayer { alpha = ((0.25f - progress) * 4).coerceIn(0f, 1f) },
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold
                     )
                     Text(
                         modifier = Modifier
 //                            .padding(logoPadding)
 //                            .height(costaRicaHeight)
+                            .graphicsLayer {
+                                alpha = ((progress - 0.5f) * 4).coerceIn(
+                                    minimumValue = 0f,
+                                    maximumValue = 1f
+                                )
+                            }
                             .wrapContentWidth(),
-                        text = "Good Evening",
-                        style = MaterialTheme.typography.headlineMedium,
+                        text = if (currentHour in 0..11) {
+                            "Good Morning,"
+                        } else if (currentHour in 12..15) {
+                            "Good Afternoon,"
+                        } else if (currentHour in 16..20) {
+                            "Good Evening,"
+                        } else if (currentHour in 21..23) {
+                            "Good Night,"
+                        } else {
+                            ""
+                        },
+                        style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold
                     )
 //                    Image(
@@ -167,6 +223,12 @@ fun CollapsingToolbar(
                         modifier = Modifier
 //                            .padding(logoPadding)
 //                            .height(costaRicaHeight)
+                            .graphicsLayer {
+                                alpha = ((progress - 0.5f) * 4).coerceIn(
+                                    minimumValue = 0f,
+                                    maximumValue = 1f
+                                )
+                            }
                             .wrapContentWidth(),
                         text = "You have 10 Notes",
                         style = MaterialTheme.typography.titleLarge,
@@ -181,29 +243,36 @@ fun CollapsingToolbar(
 //                            .wrapContentWidth(),
 //                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
 //                    )
-//                    Text(
+                    Text(
+                        modifier = Modifier
+                            .padding(logoPadding)
+                            .height(wildlifeHeight)
+                            .graphicsLayer {
+                                alpha = ((progress - 0.25f) * 4).coerceIn(
+                                    minimumValue = 0f,
+                                    maximumValue = 1f
+                                )
+                            }
+                            .wrapContentWidth(),
+                        text = "$dayOfWeek,\r\n$dayOfMonth",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Light,
+                        textAlign = TextAlign.Center
+                    )
+//                    Image(
+//                        painter = painterResource(id = R.drawable.icon_note),
+//                        contentDescription = null,
 //                        modifier = Modifier
 //                            .padding(logoPadding)
 //                            .height(wildlifeHeight)
+//                            .wrapContentWidth()
 //                            .graphicsLayer {
-//                                alpha = ((progress - 0.25f) * 4).coerceIn(
+//                                alpha = ((progress - 0.5f) * 4).coerceIn(
 //                                    minimumValue = 0f,
 //                                    maximumValue = 1f
 //                                )
 //                            }
-//                            .wrapContentWidth(),
-//                        text = "",
-//                        style = MaterialTheme.typography.titleLarge,
-//                        fontWeight = FontWeight.Bold
 //                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.icon_note),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(logoPadding)
-                            .height(wildlifeHeight)
-                            .wrapContentWidth(),
-                    )
                     //#endregion
                     //#region Buttons
                     Row(
@@ -282,37 +351,37 @@ private fun CollapsingToolbarLayout(
             )
             costa.placeRelative(
                 x = lerp(
-                    start = countryMap.width,
+                    start = 0,
                     stop = 0,
                     fraction = progress
                 ),
                 y = lerp(
                     start = collapsedHorizontalGuideline - costa.height / 2,
-                    stop = expandedHorizontalGuideline - costa.height /2,
+                    stop = expandedHorizontalGuideline - costa.height / 2,
                     fraction = progress
                 )
             )
             rica.placeRelative(
                 x = lerp(
-                    start = countryMap.width + costa.width,
+                    start = 0,
                     stop = 0,
                     fraction = progress
                 ),
                 y = lerp(
-                    start = collapsedHorizontalGuideline - rica.height / 2,
+                    start = collapsedHorizontalGuideline + rica.height / 2,
                     stop = expandedHorizontalGuideline + rica.height / 2,
                     fraction = progress
                 )
             )
             wildlife.placeRelative(
                 x = lerp(
-                    start = countryMap.width + costa.width + rica.width,
-                    stop = constraints.maxWidth / 3,
+                    start = constraints.maxWidth - wildlife.width,
+                    stop = constraints.maxWidth - wildlife.width,
                     fraction = progress
                 ),
                 y = lerp(
-                    start = collapsedHorizontalGuideline - wildlife.height / 2,
-                    stop = expandedHorizontalGuideline + rica.height,
+                    start = collapsedHorizontalGuideline / 2,
+                    stop = constraints.maxHeight / 3,
                     fraction = progress
                 )
             )
