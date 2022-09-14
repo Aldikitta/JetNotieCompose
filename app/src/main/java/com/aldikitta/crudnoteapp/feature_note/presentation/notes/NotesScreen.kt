@@ -90,8 +90,8 @@ fun NotesScreen(
             CollapsingToolbar(
 //                backgroundImageResId = com.aldikitta.crudnoteapp.R.drawable.toolbar_background,
                 progress = toolbarState.progress,
-                onPrivacyTipButtonClicked = {},
-                onSettingsButtonClicked = {},
+                onSortClicked = {viewModel.onEvent(NotesEvent.ToggleOrderSection)},
+                onSearchClicked = {navController.navigate(Screen.SearchScreen.route)},
                 modifier = Modifier
                     .fillMaxWidth()
                     .statusBarsPadding()

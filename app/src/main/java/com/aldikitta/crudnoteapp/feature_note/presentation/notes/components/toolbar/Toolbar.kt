@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material.icons.rounded.PrivacyTip
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.*
@@ -98,8 +100,8 @@ private val MapHeight = CollapsedCostaRicaHeight * 2
 fun CollapsingToolbar(
 //    @DrawableRes backgroundImageResId: Int,
     progress: Float,
-    onPrivacyTipButtonClicked: () -> Unit,
-    onSettingsButtonClicked: () -> Unit,
+    onSortClicked: () -> Unit,
+    onSearchClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val costaRicaHeight = with(LocalDensity.current) {
@@ -114,8 +116,8 @@ fun CollapsingToolbar(
 
     val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     val currentHour1 = Calendar.getInstance().get(Calendar.FRIDAY)
-    val day = SimpleDateFormat("EEE")
-    val month = SimpleDateFormat("MMM d")
+    val day = SimpleDateFormat("h:mm a")
+    val month = SimpleDateFormat("EEE, MMM d")
 
     val dayOfWeek = day.format(Date())
     val dayOfMonth = month.format(Date())
@@ -142,7 +144,7 @@ fun CollapsingToolbar(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(shape = RoundedCornerShape(MaterialTheme.spacing.small))
+                    .clip(shape = RoundedCornerShape(MaterialTheme.spacing.medium))
                     .background(gradientGrayWhite)
 
             )
@@ -248,14 +250,14 @@ fun CollapsingToolbar(
                             .padding(logoPadding)
                             .height(wildlifeHeight)
                             .graphicsLayer {
-                                alpha = ((progress - 0.25f) * 4).coerceIn(
+                                alpha = ((progress - 0.5f) * 4).coerceIn(
                                     minimumValue = 0f,
                                     maximumValue = 1f
                                 )
                             }
                             .wrapContentWidth(),
                         text = "$dayOfWeek,\r\n$dayOfMonth",
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Light,
                         textAlign = TextAlign.Center
                     )
@@ -280,32 +282,24 @@ fun CollapsingToolbar(
                         horizontalArrangement = Arrangement.spacedBy(ContentPadding)
                     ) {
                         IconButton(
-                            onClick = onPrivacyTipButtonClicked,
-                            modifier = Modifier
-                                .size(ButtonSize)
-                                .background(
-                                    color = LocalContentColor.current.copy(alpha = 0.0f),
-                                    shape = CircleShape
-                                )
+                            onClick = onSortClicked,
+//                            modifier = Modifier
+//                                .size(ButtonSize)
                         ) {
                             Icon(
-                                modifier = Modifier.fillMaxSize(),
-                                imageVector = Icons.Rounded.PrivacyTip,
+//                                modifier = Modifier.fillMaxSize(),
+                                imageVector = Icons.Filled.Sort,
                                 contentDescription = null,
                             )
                         }
                         IconButton(
-                            onClick = onSettingsButtonClicked,
-                            modifier = Modifier
-                                .size(ButtonSize)
-                                .background(
-                                    color = LocalContentColor.current.copy(alpha = 0.0f),
-                                    shape = CircleShape
-                                )
+                            onClick = onSearchClicked,
+//                            modifier = Modifier
+//                                .size(ButtonSize)
                         ) {
                             Icon(
-                                modifier = Modifier.fillMaxSize(),
-                                imageVector = Icons.Rounded.Settings,
+//                                modifier = Modifier.fillMaxSize(),
+                                imageVector = Icons.Filled.Search,
                                 contentDescription = null,
                             )
                         }
@@ -380,8 +374,8 @@ private fun CollapsingToolbarLayout(
                     fraction = progress
                 ),
                 y = lerp(
-                    start = collapsedHorizontalGuideline / 2,
-                    stop = constraints.maxHeight / 3,
+                    start = constraints.maxHeight - wildlife.height,
+                    stop = constraints.maxHeight - wildlife.height,
                     fraction = progress
                 )
             )
@@ -389,7 +383,7 @@ private fun CollapsingToolbarLayout(
                 x = constraints.maxWidth - buttons.width,
                 y = lerp(
                     start = (constraints.maxHeight - buttons.height) / 2,
-                    stop = 0,
+                    stop = expandedHorizontalGuideline / 4,
                     fraction = progress
                 )
             )
