@@ -1,5 +1,6 @@
 package com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.toolbar
 
+import android.text.format.DateFormat
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.aldikitta.crudnoteapp.R
 import com.aldikitta.crudnoteapp.ui.theme.*
 import kotlinx.coroutines.delay
@@ -116,13 +118,21 @@ fun CollapsingToolbar(
         lerp(CollapsedPadding.toPx(), ExpandedPadding.toPx(), progress).toDp()
     }
 
-
-//    val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-    val day = SimpleDateFormat("h:mm a")
+    val day = SimpleDateFormat("h:mm:ss a")
     val month = SimpleDateFormat("EEE, MMM d")
 
-    val dayOfWeek = day.format(Date())
     val dayOfMonth = month.format(Date())
+    var dayOfWeek by remember {
+        mutableStateOf("")
+    }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            var getCurrentTime = day.format(Date())
+            dayOfWeek = getCurrentTime
+            delay(1000)
+        }
+    }
 
     val currentHour by remember {
         mutableStateOf(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))
