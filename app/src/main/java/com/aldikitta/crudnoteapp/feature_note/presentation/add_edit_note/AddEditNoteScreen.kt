@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -17,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
@@ -64,22 +66,37 @@ fun AddEditNoteScreen(
         }
     }
     Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { viewModel.onEvent(AddEditNoteEvent.SaveNote) }
-            ) {
-                Icon(imageVector = Icons.Default.Save, contentDescription = "Save note")
-            }
-        },
+//        floatingActionButton = {
+//            FloatingActionButton(
+//                onClick = { viewModel.onEvent(AddEditNoteEvent.SaveNote) },
+//                containerColor = noteBackgroundAnimateable.value
+//            ) {
+//                Icon(imageVector = Icons.Default.Save, contentDescription = "Save note")
+//            }
+//        },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = "Hello")
+                    Text(text = "Notes", fontWeight = FontWeight.Bold)
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back")
                     }
+                },
+                actions = {
+                    TextButton(onClick = {
+                        viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                    }) {
+                        Text(text = "Save", color = noteBackgroundAnimateable.value, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Medium)
+                    }
+//                    Box(
+//                        modifier = Modifier
+//                            .padding(horizontal = MaterialTheme.spacing.medium)
+//                            .size(MaterialTheme.spacing.large)
+//                            .clip(CircleShape)
+//                            .background(noteBackgroundAnimateable.value)
+//                    )
                 }
             )
         }
@@ -90,9 +107,14 @@ fun AddEditNoteScreen(
                 .padding(innerPadding)
                 .padding(MaterialTheme.spacing.small)
         ) {
-            Text(text = "Priority", modifier = Modifier)
+            Text(
+                text = "Priority",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Medium
+            )
             Row(
                 modifier = Modifier
+                    .padding(vertical = MaterialTheme.spacing.small)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
@@ -101,6 +123,7 @@ fun AddEditNoteScreen(
                     val colorInt = color.toArgb()
                     Box(modifier = Modifier
                         .weight(1f)
+                        .padding(horizontal = MaterialTheme.spacing.extraSmall)
                         .size(MaterialTheme.spacing.mediumLarge)
                         .clip(MaterialTheme.shapes.large)
                         .background(color)
@@ -120,16 +143,27 @@ fun AddEditNoteScreen(
                             } else Color.Transparent,
                             shape = RoundedCornerShape(MaterialTheme.spacing.medium)
                         )
-                    ) {
-
-                    }
+                    )
                 }
             }
-            Row() {
-                Text(text = "Date")
-                Text(text = dayOfMonth)
+            Row(
+                modifier = Modifier
+                    .padding(vertical = MaterialTheme.spacing.small)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Date", style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    text = dayOfMonth, style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Medium
+                )
             }
             TransparentTextField(
+                modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium),
                 text = titleState.text,
                 onValueChange = { viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it)) },
                 onFocusChange = {
