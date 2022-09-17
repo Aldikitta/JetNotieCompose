@@ -32,6 +32,8 @@ import com.aldikitta.crudnoteapp.ui.theme.RedOrange
 import com.aldikitta.crudnoteapp.ui.theme.spacing
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -40,6 +42,11 @@ fun AddEditNoteScreen(
     noteColor: Int,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
+
+    val month = SimpleDateFormat("EEE, MMM d")
+
+    val dayOfMonth = month.format(Date())
+
     val titleState by viewModel.noteTitle.collectAsStateWithLifecycle()
     val contentState by viewModel.noteContent.collectAsStateWithLifecycle()
     val noteColorState by viewModel.noteColor.collectAsStateWithLifecycle()
@@ -51,8 +58,9 @@ fun AddEditNoteScreen(
     }
     val scope = rememberCoroutineScope()
 
+    var state by remember { mutableStateOf(0) }
     val listColors = Note.noteColors
-    val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
+    val options = listOf("Option 1", "Option 2", "Option 3")
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(options[0]) }
     val selectedListColors by remember { mutableStateOf(listColors[0]) }
@@ -97,19 +105,54 @@ fun AddEditNoteScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(noteBackgroundAnimateable.value)
+//                .background(noteBackgroundAnimateable.value)
         ) {
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(MaterialTheme.spacing.small),
+//                horizontalArrangement = Arrangement.SpaceBetween
+//            ) {
+//                Note.noteColors.forEach { color ->
+//                    val colorInt = color.toArgb()
+//                    Box(modifier = Modifier
+//                        .size(50.dp)
+//                        .clip(CircleShape)
+//                        .background(color)
+//                        .clickable {
+//                            scope.launch {
+//                                noteBackgroundAnimateable.animateTo(
+//                                    targetValue = Color(colorInt),
+//                                    animationSpec = tween(300)
+//                                )
+//                            }
+//                            viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
+//                        }
+//                        .border(
+//                            width = 3.dp,
+//                            color = if (viewModel.noteColor.value == colorInt) {
+//                                Color.Black
+//                            } else Color.Transparent,
+//                            shape = CircleShape
+//                        )
+//                    )
+//                }
+//            }
+            Text(text = "Priority")
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(MaterialTheme.spacing.small),
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
                 Note.noteColors.forEach { color ->
                     val colorInt = color.toArgb()
                     Box(modifier = Modifier
-                        .size(50.dp)
-                        .clip(CircleShape)
+                        .padding(horizontal = MaterialTheme.spacing.extraSmall)
+                        .weight(1f)
+                        .size(MaterialTheme.spacing.mediumLarge)
+                        .clip(MaterialTheme.shapes.large)
                         .background(color)
                         .clickable {
                             scope.launch {
@@ -123,25 +166,30 @@ fun AddEditNoteScreen(
                         .border(
                             width = 3.dp,
                             color = if (viewModel.noteColor.value == colorInt) {
-                                Color.Black
+                                MaterialTheme.colorScheme.primary
                             } else Color.Transparent,
-                            shape = CircleShape
+                            shape = RoundedCornerShape(MaterialTheme.spacing.medium)
                         )
-                    )
+                    ){
+
+                    }
                 }
+            }
+            Row() {
+                Text(text = "Date")
+                Text(text = dayOfMonth)
             }
             TransparentTextField(
                 text = titleState.text,
-//                hint = titleState.hint,
                 onValueChange = { viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it)) },
                 onFocusChange = {
                     viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
                 },
-//                isHintVisible = titleState.isHintVisible,
                 singleline = true,
                 placeholder = {
                     Text(text = titleState.hint, style = MaterialTheme.typography.titleLarge)
-                }
+                },
+                focusColor = noteBackgroundAnimateable.value
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
             TransparentTextField(
@@ -153,6 +201,7 @@ fun AddEditNoteScreen(
                 },
 //                isHintVisible = contentState.isHintVisible,
                 modifier = Modifier.fillMaxHeight(),
+                focusColor = noteBackgroundAnimateable.value,
                 placeholder = {
                     Text(text = contentState.hint, style = MaterialTheme.typography.titleSmall)
                 }
