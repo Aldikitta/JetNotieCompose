@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -18,9 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
@@ -28,7 +24,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.aldikitta.crudnoteapp.feature_note.domain.model.Note
 import com.aldikitta.crudnoteapp.feature_note.presentation.add_edit_note.components.TransparentTextField
-import com.aldikitta.crudnoteapp.ui.theme.RedOrange
 import com.aldikitta.crudnoteapp.ui.theme.spacing
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -42,9 +37,7 @@ fun AddEditNoteScreen(
     noteColor: Int,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
-
     val month = SimpleDateFormat("EEE, MMM d")
-
     val dayOfMonth = month.format(Date())
 
     val titleState by viewModel.noteTitle.collectAsStateWithLifecycle()
@@ -57,16 +50,6 @@ fun AddEditNoteScreen(
         )
     }
     val scope = rememberCoroutineScope()
-
-    var state by remember { mutableStateOf(0) }
-    val listColors = Note.noteColors
-    val options = listOf("Option 1", "Option 2", "Option 3")
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf(options[0]) }
-    val selectedListColors by remember { mutableStateOf(listColors[0]) }
-//    val nameContent = when (Note.noteColors){
-//        is Note.
-//    }
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -105,51 +88,18 @@ fun AddEditNoteScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-//                .background(noteBackgroundAnimateable.value)
+                .padding(MaterialTheme.spacing.small)
         ) {
-//            Row(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(MaterialTheme.spacing.small),
-//                horizontalArrangement = Arrangement.SpaceBetween
-//            ) {
-//                Note.noteColors.forEach { color ->
-//                    val colorInt = color.toArgb()
-//                    Box(modifier = Modifier
-//                        .size(50.dp)
-//                        .clip(CircleShape)
-//                        .background(color)
-//                        .clickable {
-//                            scope.launch {
-//                                noteBackgroundAnimateable.animateTo(
-//                                    targetValue = Color(colorInt),
-//                                    animationSpec = tween(300)
-//                                )
-//                            }
-//                            viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
-//                        }
-//                        .border(
-//                            width = 3.dp,
-//                            color = if (viewModel.noteColor.value == colorInt) {
-//                                Color.Black
-//                            } else Color.Transparent,
-//                            shape = CircleShape
-//                        )
-//                    )
-//                }
-//            }
-            Text(text = "Priority")
+            Text(text = "Priority", modifier = Modifier)
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(MaterialTheme.spacing.small),
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
                 Note.noteColors.forEach { color ->
                     val colorInt = color.toArgb()
                     Box(modifier = Modifier
-                        .padding(horizontal = MaterialTheme.spacing.extraSmall)
                         .weight(1f)
                         .size(MaterialTheme.spacing.mediumLarge)
                         .clip(MaterialTheme.shapes.large)
@@ -170,7 +120,7 @@ fun AddEditNoteScreen(
                             } else Color.Transparent,
                             shape = RoundedCornerShape(MaterialTheme.spacing.medium)
                         )
-                    ){
+                    ) {
 
                     }
                 }
@@ -194,12 +144,10 @@ fun AddEditNoteScreen(
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
             TransparentTextField(
                 text = contentState.text,
-//                hint = contentState.hint,
                 onValueChange = { viewModel.onEvent(AddEditNoteEvent.EnteredContent(it)) },
                 onFocusChange = {
                     viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
                 },
-//                isHintVisible = contentState.isHintVisible,
                 modifier = Modifier.fillMaxHeight(),
                 focusColor = noteBackgroundAnimateable.value,
                 placeholder = {
