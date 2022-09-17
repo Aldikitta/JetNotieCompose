@@ -13,7 +13,6 @@ data class Note(
     val content: String,
     val timeStamp: Long,
     val color: Int,
-//    val image: ImageVector.Companion?
 ) {
     companion object {
         val noteColors = listOf(RedOrange, RedPink, Violet, LightGreen)

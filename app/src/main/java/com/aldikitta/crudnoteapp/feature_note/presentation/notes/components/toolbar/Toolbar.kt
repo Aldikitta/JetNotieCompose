@@ -1,5 +1,6 @@
 package com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.toolbar
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,7 +12,7 @@ import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material.icons.rounded.PrivacyTip
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import com.aldikitta.crudnoteapp.R
 import com.aldikitta.crudnoteapp.ui.theme.*
+import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
@@ -114,13 +116,40 @@ fun CollapsingToolbar(
         lerp(CollapsedPadding.toPx(), ExpandedPadding.toPx(), progress).toDp()
     }
 
-    val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-    val currentHour1 = Calendar.getInstance().get(Calendar.FRIDAY)
+
+//    val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     val day = SimpleDateFormat("h:mm a")
     val month = SimpleDateFormat("EEE, MMM d")
 
     val dayOfWeek = day.format(Date())
     val dayOfMonth = month.format(Date())
+
+    val currentHour by remember {
+        mutableStateOf(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))
+    }
+    var greeting by remember {
+        mutableStateOf("")
+    }
+    LaunchedEffect(currentHour) {
+        when (currentHour) {
+            in 0..11 -> {
+                greeting = "Good Morning"
+                Log.d("TAG", greeting)
+            }
+            in 12..15 -> {
+                greeting = "Good Afternoon"
+                Log.d("TAG", greeting)
+            }
+            in 16..20 -> {
+                greeting = "Good Evening"
+                Log.d("TAG", greeting)
+            }
+            in 21..23 -> {
+                greeting = "Good Night"
+                Log.d("TAG", greeting)
+            }
+        }
+    }
 
 
     Surface(
@@ -176,21 +205,17 @@ fun CollapsingToolbar(
                     .fillMaxSize()
             ) {
                 CollapsingToolbarLayout(progress = progress) {
-                    //#region Logo Images
                     Text(
                         text = "Notes",
                         modifier = Modifier
-//                            .padding(logoPadding)
-//                            .height(MapHeight)
                             .wrapContentWidth()
                             .graphicsLayer { alpha = ((0.25f - progress) * 4).coerceIn(0f, 1f) },
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold
                     )
+
                     Text(
                         modifier = Modifier
-//                            .padding(logoPadding)
-//                            .height(costaRicaHeight)
                             .graphicsLayer {
                                 alpha = ((progress - 0.5f) * 4).coerceIn(
                                     minimumValue = 0f,
@@ -198,33 +223,12 @@ fun CollapsingToolbar(
                                 )
                             }
                             .wrapContentWidth(),
-                        text = if (currentHour in 0..11) {
-                            "Good Morning,"
-                        } else if (currentHour in 12..15) {
-                            "Good Afternoon,"
-                        } else if (currentHour in 16..20) {
-                            "Good Evening,"
-                        } else if (currentHour in 21..23) {
-                            "Good Night,"
-                        } else {
-                            ""
-                        },
+                        text = greeting,
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold
                     )
-//                    Image(
-//                        painter = painterResource(id = R.drawable.logo_costa),
-//                        contentDescription = null,
-//                        modifier = Modifier
-//                            .padding(logoPadding)
-//                            .height(costaRicaHeight)
-//                            .wrapContentWidth(),
-//                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
-//                    )
                     Text(
                         modifier = Modifier
-//                            .padding(logoPadding)
-//                            .height(costaRicaHeight)
                             .graphicsLayer {
                                 alpha = ((progress - 0.5f) * 4).coerceIn(
                                     minimumValue = 0f,
@@ -236,15 +240,6 @@ fun CollapsingToolbar(
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Light
                     )
-//                    Image(
-//                        painter = painterResource(id = R.drawable.logo_rica),
-//                        contentDescription = null,
-//                        modifier = Modifier
-//                            .padding(logoPadding)
-//                            .height(costaRicaHeight)
-//                            .wrapContentWidth(),
-//                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
-//                    )
                     Text(
                         modifier = Modifier
                             .padding(logoPadding)
@@ -261,50 +256,27 @@ fun CollapsingToolbar(
                         fontWeight = FontWeight.Light,
                         textAlign = TextAlign.Center
                     )
-//                    Image(
-//                        painter = painterResource(id = R.drawable.icon_note),
-//                        contentDescription = null,
-//                        modifier = Modifier
-//                            .padding(logoPadding)
-//                            .height(wildlifeHeight)
-//                            .wrapContentWidth()
-//                            .graphicsLayer {
-//                                alpha = ((progress - 0.5f) * 4).coerceIn(
-//                                    minimumValue = 0f,
-//                                    maximumValue = 1f
-//                                )
-//                            }
-//                    )
-                    //#endregion
-                    //#region Buttons
                     Row(
                         modifier = Modifier.wrapContentSize(),
                         horizontalArrangement = Arrangement.spacedBy(ContentPadding)
                     ) {
                         IconButton(
                             onClick = onSortClicked,
-//                            modifier = Modifier
-//                                .size(ButtonSize)
                         ) {
                             Icon(
-//                                modifier = Modifier.fillMaxSize(),
                                 imageVector = Icons.Filled.Sort,
                                 contentDescription = null,
                             )
                         }
                         IconButton(
                             onClick = onSearchClicked,
-//                            modifier = Modifier
-//                                .size(ButtonSize)
                         ) {
                             Icon(
-//                                modifier = Modifier.fillMaxSize(),
                                 imageVector = Icons.Filled.Search,
                                 contentDescription = null,
                             )
                         }
                     }
-                    //#endregion
                 }
             }
         }

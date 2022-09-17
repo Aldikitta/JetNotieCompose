@@ -7,17 +7,20 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
@@ -25,6 +28,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.aldikitta.crudnoteapp.feature_note.domain.model.Note
 import com.aldikitta.crudnoteapp.feature_note.presentation.add_edit_note.components.TransparentTextField
+import com.aldikitta.crudnoteapp.ui.theme.RedOrange
+import com.aldikitta.crudnoteapp.ui.theme.spacing
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -46,6 +51,15 @@ fun AddEditNoteScreen(
     }
     val scope = rememberCoroutineScope()
 
+    val listColors = Note.noteColors
+    val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedOptionText by remember { mutableStateOf(options[0]) }
+    val selectedListColors by remember { mutableStateOf(listColors[0]) }
+//    val nameContent = when (Note.noteColors){
+//        is Note.
+//    }
+
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
@@ -65,15 +79,30 @@ fun AddEditNoteScreen(
             ) {
                 Icon(imageVector = Icons.Default.Save, contentDescription = "Save note")
             }
+        },
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(text = "Hello")
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back")
+                    }
+                }
+            )
         }
-    ) {
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(innerPadding)
                 .background(noteBackgroundAnimateable.value)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(MaterialTheme.spacing.small),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Note.noteColors.forEach { color ->
@@ -103,23 +132,30 @@ fun AddEditNoteScreen(
             }
             TransparentTextField(
                 text = titleState.text,
-                hint = titleState.hint,
+//                hint = titleState.hint,
                 onValueChange = { viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it)) },
                 onFocusChange = {
                     viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
                 },
-                isHintVisible = titleState.isHintVisible,
-                singleline = true
+//                isHintVisible = titleState.isHintVisible,
+                singleline = true,
+                placeholder = {
+                    Text(text = titleState.hint, style = MaterialTheme.typography.titleLarge)
+                }
             )
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
             TransparentTextField(
                 text = contentState.text,
-                hint = contentState.hint,
+//                hint = contentState.hint,
                 onValueChange = { viewModel.onEvent(AddEditNoteEvent.EnteredContent(it)) },
                 onFocusChange = {
                     viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
                 },
-                isHintVisible = contentState.isHintVisible,
-                modifier = Modifier.fillMaxHeight()
+//                isHintVisible = contentState.isHintVisible,
+                modifier = Modifier.fillMaxHeight(),
+                placeholder = {
+                    Text(text = contentState.hint, style = MaterialTheme.typography.titleSmall)
+                }
             )
         }
     }
