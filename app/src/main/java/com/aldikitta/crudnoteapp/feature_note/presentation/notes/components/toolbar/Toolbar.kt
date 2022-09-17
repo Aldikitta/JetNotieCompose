@@ -118,7 +118,7 @@ fun CollapsingToolbar(
         lerp(CollapsedPadding.toPx(), ExpandedPadding.toPx(), progress).toDp()
     }
 
-    val day = SimpleDateFormat("h:mm:ss a")
+    val day = SimpleDateFormat("h:mm a")
     val month = SimpleDateFormat("EEE, MMM d")
 
     val dayOfMonth = month.format(Date())
