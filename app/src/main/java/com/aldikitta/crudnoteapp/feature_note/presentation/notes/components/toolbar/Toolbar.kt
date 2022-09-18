@@ -106,7 +106,8 @@ fun CollapsingToolbar(
     progress: Float,
     onSortClicked: () -> Unit,
     onSearchClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    noteCount: Int
 ) {
     val costaRicaHeight = with(LocalDensity.current) {
         lerp(CollapsedCostaRicaHeight.toPx(), ExpandedCostaRicaHeight.toPx(), progress).toDp()
@@ -246,7 +247,7 @@ fun CollapsingToolbar(
                                 )
                             }
                             .wrapContentWidth(),
-                        text = "You have 10 Notes",
+                        text = "You have $noteCount notes",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Light
                     )

@@ -1,12 +1,9 @@
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,8 +12,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.aldikitta.crudnoteapp.feature_note.domain.model.Note
+import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesEvent
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesUiState
+import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesViewModel
 import com.aldikitta.crudnoteapp.feature_note.presentation.util.Screen
 import com.aldikitta.crudnoteapp.ui.theme.spacing
 import java.text.SimpleDateFormat
@@ -28,6 +29,7 @@ fun NoteItemGrid(
     state: NotesUiState,
     paddingValues: PaddingValues,
     navController: NavController,
+    viewModel: NotesViewModel = hiltViewModel(),
 ) {
     Column(
         modifier = Modifier
@@ -53,43 +55,70 @@ fun NoteItemGrid(
                                 navController.navigate(
                                     Screen.AddEditNoteScreen.route +
                                             "?noteId=${note.id}&noteColor=${note.color}"
-                                ){
+                                ) {
 
                                 }
-                            }
+                            },
                     ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .size(MaterialTheme.spacing.small)
+                                .background(Color(note.color))
+                        )
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(MaterialTheme.colorScheme.inverseOnSurface)
                                 .padding(MaterialTheme.spacing.small)
                         ) {
+                            Text(
+                                text = note.title,
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(bottom = MaterialTheme.spacing.small)
+                            )
+//                            Row(
+//                                horizontalArrangement = Arrangement.SpaceBetween,
+//                                verticalAlignment = Alignment.CenterVertically,
+//                                modifier = Modifier.fillMaxWidth()
+//                            ) {
+//
+//                                Box(
+//                                    modifier = Modifier
+//                                        .clip(CircleShape)
+////                                            .weight(1f)
+//                                        .size(20.dp)
+//                                        .background(Color(note.color))
+//                                )
+//                            }
+                            Text(
+                                text = note.content,
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(bottom = MaterialTheme.spacing.small)
+                            )
+                            Divider(modifier = Modifier.padding(top = MaterialTheme.spacing.small))
                             Row(
+                                modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxWidth()
+                                verticalAlignment = Alignment.CenterVertically
+
                             ) {
                                 Text(
-                                    text = note.title,
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(bottom = MaterialTheme.spacing.small)
+                                    text = final, style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.outline
                                 )
-                                Box(
-                                    modifier = Modifier
-                                        .clip(CircleShape)
-//                                            .weight(1f)
-                                        .size(20.dp)
-                                        .background(Color(note.color))
-                                )
+                                IconButton(
+                                    onClick = { viewModel.onEvent(NotesEvent.DeleteNote(note)) },
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Delete,
+                                        contentDescription = null
+                                    )
+                                }
                             }
-                            Text(text = note.content)
                         }
                     }
-                    Text(
-                        text = final,
-                        modifier = Modifier.padding(bottom = MaterialTheme.spacing.large)
-                    )
                 }
             }
         }
@@ -185,3 +214,5 @@ private fun testColumn(columnHeights: IntArray): Int {
     // at last we are returning our column index.
     return columnIndex
 }
+
+

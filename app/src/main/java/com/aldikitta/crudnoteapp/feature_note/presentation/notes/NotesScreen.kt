@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.aldikitta.crudnoteapp.feature_note.domain.model.Note
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.OrderSection
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.toolbar.CollapsingToolbar
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.toolbar.ExitUntilCollapsedState
@@ -40,15 +41,17 @@ import kotlinx.coroutines.launch
 
 private val MinToolbarHeight = 80.dp
 private val MaxToolbarHeight = 230.dp
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLifecycleComposeApi::class)
 @Composable
 fun NotesScreen(
     navController: NavController,
-    viewModel: NotesViewModel = hiltViewModel()
+    viewModel: NotesViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
 
+    val getNoteCount = state.notes.size
 
     val toolbarHeightRange = with(LocalDensity.current) {
         MinToolbarHeight.roundToPx()..MaxToolbarHeight.roundToPx()
@@ -59,7 +62,8 @@ fun NotesScreen(
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                toolbarState.scrollTopLimitReached = listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
+                toolbarState.scrollTopLimitReached =
+                    listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
                 toolbarState.scrollOffset = toolbarState.scrollOffset - available.y
                 return Offset(0f, toolbarState.consumed)
             }
@@ -72,8 +76,10 @@ fun NotesScreen(
                             initialVelocity = available.y,
                             animationSpec = FloatExponentialDecaySpec()
                         ) { value, velocity ->
-                            toolbarState.scrollTopLimitReached = listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
-                            toolbarState.scrollOffset = toolbarState.scrollOffset - (value - (toolbarState.height + toolbarState.offset))
+                            toolbarState.scrollTopLimitReached =
+                                listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
+                            toolbarState.scrollOffset =
+                                toolbarState.scrollOffset - (value - (toolbarState.height + toolbarState.offset))
                             if (toolbarState.scrollOffset == 0f) scope.coroutineContext.cancelChildren()
                         }
                     }
@@ -90,13 +96,14 @@ fun NotesScreen(
             CollapsingToolbar(
 //                backgroundImageResId = com.aldikitta.crudnoteapp.R.drawable.toolbar_background,
                 progress = toolbarState.progress,
-                onSortClicked = {viewModel.onEvent(NotesEvent.ToggleOrderSection)},
-                onSearchClicked = {navController.navigate(Screen.SearchScreen.route)},
+                onSortClicked = { viewModel.onEvent(NotesEvent.ToggleOrderSection) },
+                onSearchClicked = { navController.navigate(Screen.SearchScreen.route) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .statusBarsPadding()
                     .height(with(LocalDensity.current) { toolbarState.height.toDp() })
-                    .graphicsLayer { translationY = toolbarState.offset }
+                    .graphicsLayer { translationY = toolbarState.offset },
+                noteCount = getNoteCount
             )
 //            CenterAlignedTopAppBar(
 //                title = {

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.navigation.NavController
+import com.aldikitta.crudnoteapp.feature_note.domain.model.Note
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesEvent
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesViewModel
 import com.aldikitta.crudnoteapp.ui.theme.spacing
@@ -27,6 +28,7 @@ import com.aldikitta.crudnoteapp.ui.theme.spacing
 fun SearchScreen(
     navController: NavController,
     viewModel: NotesViewModel = hiltViewModel(),
+    note: Note? = null
 ) {
     val state = viewModel.tasksUiState
     Column(
@@ -78,7 +80,7 @@ fun SearchScreen(
         NoteItemGrid(
             state = state,
             paddingValues = PaddingValues(top = MaterialTheme.spacing.small),
-            navController
+            navController,
         )
     }
 }
