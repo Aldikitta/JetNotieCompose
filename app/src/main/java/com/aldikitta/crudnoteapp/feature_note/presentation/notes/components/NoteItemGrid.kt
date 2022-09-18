@@ -5,6 +5,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,6 +22,8 @@ import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesUiState
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesViewModel
 import com.aldikitta.crudnoteapp.feature_note.presentation.util.Screen
 import com.aldikitta.crudnoteapp.ui.theme.spacing
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -30,7 +34,10 @@ fun NoteItemGrid(
     paddingValues: PaddingValues,
     navController: NavController,
     viewModel: NotesViewModel = hiltViewModel(),
+    snackbarHostState: SnackbarHostState? = null
 ) {
+//    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -109,7 +116,18 @@ fun NoteItemGrid(
                                     color = MaterialTheme.colorScheme.outline
                                 )
                                 IconButton(
-                                    onClick = { viewModel.onEvent(NotesEvent.DeleteNote(note)) },
+                                    onClick = {
+                                        viewModel.onEvent(NotesEvent.DeleteNote(note))
+                                        scope.launch {
+                                            val result = snackbarHostState!!.showSnackbar(
+                                                message = "${note.title} will be deleted!",
+                                                actionLabel = "Undo"
+                                            )
+                                            if (result == SnackbarResult.ActionPerformed) {
+                                                viewModel.onEvent(NotesEvent.RestoreNote)
+                                            }
+                                        }
+                                    },
                                 ) {
                                     Icon(
                                         imageVector = Icons.Filled.Delete,

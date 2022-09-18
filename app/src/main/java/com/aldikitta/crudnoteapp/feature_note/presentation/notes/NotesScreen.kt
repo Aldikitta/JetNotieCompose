@@ -49,6 +49,7 @@ fun NotesScreen(
     viewModel: NotesViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     val getNoteCount = state.notes.size
@@ -92,6 +93,7 @@ fun NotesScreen(
 
     Scaffold(
         modifier = Modifier.nestedScroll(nestedScrollConnection),
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             CollapsingToolbar(
 //                backgroundImageResId = com.aldikitta.crudnoteapp.R.drawable.toolbar_background,
@@ -162,7 +164,12 @@ fun NotesScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            NoteItemGrid(state = state, paddingValues = innerPadding, navController = navController)
+            NoteItemGrid(
+                state = state,
+                paddingValues = innerPadding,
+                navController = navController,
+                snackbarHostState = snackbarHostState
+            )
         }
     }
 }
