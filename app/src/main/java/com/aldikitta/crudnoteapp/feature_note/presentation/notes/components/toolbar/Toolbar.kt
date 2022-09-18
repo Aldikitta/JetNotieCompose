@@ -102,7 +102,6 @@ private val MapHeight = CollapsedCostaRicaHeight * 2
 
 @Composable
 fun CollapsingToolbar(
-//    @DrawableRes backgroundImageResId: Int,
     progress: Float,
     onSortClicked: () -> Unit,
     onSearchClicked: () -> Unit,
@@ -164,11 +163,8 @@ fun CollapsingToolbar(
 
 
     Surface(
-//        color = MaterialTheme.colorScheme.primary,
-//        elevation = Elevation,
         modifier = modifier
     ) {
-        // Creating a Vertical Gradient Color
         val gradientGrayWhite = Brush.linearGradient(
             colors = listOf(
                 MaterialTheme.colorScheme.primaryContainer.copy(alpha = progress * Alpha),
@@ -217,7 +213,7 @@ fun CollapsingToolbar(
             ) {
                 CollapsingToolbarLayout(progress = progress) {
                     Text(
-                        text = "Notes",
+                        text = "All Notes ($noteCount)",
                         modifier = Modifier
                             .wrapContentWidth()
                             .graphicsLayer { alpha = ((0.25f - progress) * 4).coerceIn(0f, 1f) },

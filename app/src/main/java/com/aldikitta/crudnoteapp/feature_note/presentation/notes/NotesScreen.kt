@@ -96,7 +96,6 @@ fun NotesScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             CollapsingToolbar(
-//                backgroundImageResId = com.aldikitta.crudnoteapp.R.drawable.toolbar_background,
                 progress = toolbarState.progress,
                 onSortClicked = { viewModel.onEvent(NotesEvent.ToggleOrderSection) },
                 onSearchClicked = { navController.navigate(Screen.SearchScreen.route) },
@@ -107,36 +106,6 @@ fun NotesScreen(
                     .graphicsLayer { translationY = toolbarState.offset },
                 noteCount = getNoteCount
             )
-//            CenterAlignedTopAppBar(
-//                title = {
-//                    Text(text = "Your Note")
-//                },
-//                actions = {
-//                    if (state.isOrderSectionVisible) {
-//                        IconButton(
-//                            onClick = { viewModel.onEvent(NotesEvent.ToggleOrderSection) }
-//                        ) {
-//                            Icon(
-//                                imageVector = Icons.Filled.FilterList,
-//                                contentDescription = null,
-//                                tint = MaterialTheme.colorScheme.primary
-//                            )
-//                        }
-//                    } else {
-//                        IconButton(
-//                            onClick = { viewModel.onEvent(NotesEvent.ToggleOrderSection) }
-//                        ) {
-//                            Icon(
-//                                imageVector = Icons.Filled.FilterList,
-//                                contentDescription = null
-//                            )
-//                        }
-//                    }
-//                    IconButton(onClick = { navController.navigate(Screen.SearchScreen.route) }) {
-//                        Icon(imageVector = Icons.Filled.Search, contentDescription = null)
-//                    }
-//                }
-//            )
         },
         floatingActionButton = {
             FloatingActionButton(

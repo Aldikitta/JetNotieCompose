@@ -12,21 +12,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.aldikitta.crudnoteapp.feature_note.domain.model.Note
-import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesEvent
-import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesUiState
-import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesViewModel
+import com.aldikitta.crudnoteapp.feature_note.presentation.notes.*
 import com.aldikitta.crudnoteapp.feature_note.presentation.util.Screen
 import com.aldikitta.crudnoteapp.ui.theme.spacing
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 @Composable
 fun NoteItemGrid(
@@ -36,7 +34,6 @@ fun NoteItemGrid(
     viewModel: NotesViewModel = hiltViewModel(),
     snackbarHostState: SnackbarHostState? = null
 ) {
-//    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
@@ -58,6 +55,7 @@ fun NoteItemGrid(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(MaterialTheme.spacing.small)
+//                            .heightIn(min = MinToolbarHeight, max = MaxToolbarHeight)
                             .clickable {
                                 navController.navigate(
                                     Screen.AddEditNoteScreen.route +
@@ -85,20 +83,6 @@ fun NoteItemGrid(
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(bottom = MaterialTheme.spacing.small)
                             )
-//                            Row(
-//                                horizontalArrangement = Arrangement.SpaceBetween,
-//                                verticalAlignment = Alignment.CenterVertically,
-//                                modifier = Modifier.fillMaxWidth()
-//                            ) {
-//
-//                                Box(
-//                                    modifier = Modifier
-//                                        .clip(CircleShape)
-////                                            .weight(1f)
-//                                        .size(20.dp)
-//                                        .background(Color(note.color))
-//                                )
-//                            }
                             Text(
                                 text = note.content,
                                 style = MaterialTheme.typography.titleMedium,
@@ -163,11 +147,19 @@ fun CustomStaggeredVerticalGrid(
         // on below line we are creating a variable for our column width.
         val columnWidth = (constraints.maxWidth / numColumns)
 
+        val MinToolbarHeight = 80.dp
+        val MaxToolbarHeight = 230.dp
+//        val toolbarHeightRange = with(LocalDensity.current) {
+//            MinToolbarHeight.roundToPx()..MaxToolbarHeight.roundToPx()
+//        }
+
         // on the below line we are creating and initializing our items constraint widget.
         val itemConstraints = constraints.copy(maxWidth = columnWidth)
 
         // on below line we are creating and initializing our column height
-        val columnHeights = IntArray(numColumns) { 0 }
+        val columnHeights = IntArray(numColumns) {
+            0
+        }
 
         // on below line we are creating and initializing placebles
         val placeables = measurable.map { measurable ->
