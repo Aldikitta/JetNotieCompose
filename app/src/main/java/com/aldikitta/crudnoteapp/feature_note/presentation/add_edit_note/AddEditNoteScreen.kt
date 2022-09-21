@@ -88,13 +88,6 @@ fun AddEditNoteScreen(
                     }) {
                         Text(text = "Save", color = noteBackgroundAnimateable.value, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Medium)
                     }
-//                    Box(
-//                        modifier = Modifier
-//                            .padding(horizontal = MaterialTheme.spacing.medium)
-//                            .size(MaterialTheme.spacing.large)
-//                            .clip(CircleShape)
-//                            .background(noteBackgroundAnimateable.value)
-//                    )
                 }
             )
         }
@@ -183,7 +176,7 @@ fun AddEditNoteScreen(
                 modifier = Modifier.fillMaxHeight(),
                 focusColor = noteBackgroundAnimateable.value,
                 placeholder = {
-                    Text(text = contentState.hint, style = MaterialTheme.typography.titleSmall)
+                    Text(text = contentState.hint, style = MaterialTheme.typography.titleMedium)
                 }
             )
         }

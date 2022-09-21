@@ -49,13 +49,12 @@ fun NoteItemGrid(
                 var date = Date(time)
                 var final = times.format(date)
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(MaterialTheme.spacing.small)
-//                            .heightIn(min = MinToolbarHeight, max = MaxToolbarHeight)
                             .clickable {
                                 navController.navigate(
                                     Screen.AddEditNoteScreen.route +

@@ -1,22 +1,30 @@
 package com.aldikitta.crudnoteapp.feature_note.presentation.notes
 
 import NoteItemGrid
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FloatExponentialDecaySpec
 import androidx.compose.animation.core.animateDecay
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.R
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
@@ -24,6 +32,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -36,13 +45,17 @@ import com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.tool
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.toolbar.ExitUntilCollapsedState
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.toolbar.ToolbarState
 import com.aldikitta.crudnoteapp.feature_note.presentation.util.Screen
+import com.aldikitta.crudnoteapp.ui.theme.spacing
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 
 private val MinToolbarHeight = 80.dp
 private val MaxToolbarHeight = 230.dp
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLifecycleComposeApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalLifecycleComposeApi::class,
+    ExperimentalMaterialApi::class
+)
 @Composable
 fun NotesScreen(
     navController: NavController,
@@ -51,6 +64,15 @@ fun NotesScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
+    val sheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
+    )
+
+    BackHandler(sheetState.isVisible) {
+        scope.launch { sheetState.hide() }
+    }
 
     val getNoteCount = state.notes.size
 
@@ -90,55 +112,86 @@ fun NotesScreen(
             }
         }
     }
-
-    Scaffold(
-        modifier = Modifier.nestedScroll(nestedScrollConnection),
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = {
-            CollapsingToolbar(
-                progress = toolbarState.progress,
-                onSortClicked = { viewModel.onEvent(NotesEvent.ToggleOrderSection) },
-                onSearchClicked = { navController.navigate(Screen.SearchScreen.route) },
+    ModalBottomSheetLayout(
+        modifier = Modifier.fillMaxSize(),
+        sheetBackgroundColor = MaterialTheme.colorScheme.background,
+        sheetShape = MaterialTheme.shapes.extraLarge,
+        sheetState = sheetState,
+        sheetContent = {
+            Divider(
+                modifier = Modifier
+                    .width(MaterialTheme.spacing.extraLarge)
+                    .align(Alignment.CenterHorizontally)
+                    .padding(vertical = MaterialTheme.spacing.medium),
+                thickness = 4.dp
+            )
+            OrderSection(
+                onOrderChange = { viewModel.onEvent(NotesEvent.Order(it)) },
+                noteOrder = state.noteOrder,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .statusBarsPadding()
-                    .height(with(LocalDensity.current) { toolbarState.height.toDp() })
-                    .graphicsLayer { translationY = toolbarState.offset },
-                noteCount = getNoteCount
+                    .fillMaxHeight(0.2f)
+                    .navigationBarsPadding(),
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(Screen.AddEditNoteScreen.route)
+        }) {
+        Scaffold(
+            modifier = Modifier.nestedScroll(nestedScrollConnection),
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            topBar = {
+                CollapsingToolbar(
+                    progress = toolbarState.progress,
+                    onSortClicked = {
+//                    viewModel.onEvent(NotesEvent.ToggleOrderSection)
+                        scope.launch {
+                            if (sheetState.isVisible) {
+                                sheetState.hide()
+                            } else {
+                                sheetState.show()
+                            }
+                        }
+                    },
+                    onSearchClicked = { navController.navigate(Screen.SearchScreen.route) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .height(with(LocalDensity.current) { toolbarState.height.toDp() })
+                        .graphicsLayer { translationY = toolbarState.offset },
+                    noteCount = getNoteCount
+                )
+            },
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                        navController.navigate(Screen.AddEditNoteScreen.route)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = null
+                    )
                 }
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = null
+            }
+        ) { innerPadding ->
+            Column(modifier = Modifier.fillMaxSize()) {
+                AnimatedVisibility(
+                    modifier = Modifier.padding(innerPadding),
+                    visible = state.isOrderSectionVisible,
+                    enter = fadeIn() + slideInVertically(),
+                    exit = fadeOut() + slideOutVertically()
+                ) {
+                    OrderSection(
+                        onOrderChange = { viewModel.onEvent(NotesEvent.Order(it)) },
+                        noteOrder = state.noteOrder,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                NoteItemGrid(
+                    state = state,
+                    paddingValues = innerPadding,
+                    navController = navController,
+                    snackbarHostState = snackbarHostState
                 )
             }
-        }
-    ) { innerPadding ->
-        Column(modifier = Modifier.fillMaxSize()) {
-            AnimatedVisibility(
-                modifier = Modifier.padding(innerPadding),
-                visible = state.isOrderSectionVisible,
-                enter = fadeIn() + slideInVertically(),
-                exit = fadeOut() + slideOutVertically()
-            ) {
-                OrderSection(
-                    onOrderChange = { viewModel.onEvent(NotesEvent.Order(it)) },
-                    noteOrder = state.noteOrder,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-            NoteItemGrid(
-                state = state,
-                paddingValues = innerPadding,
-                navController = navController,
-                snackbarHostState = snackbarHostState
-            )
         }
     }
 }
