@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -17,7 +18,8 @@ fun TransparentTextField(
     onFocusChange: (FocusState) -> Unit,
     singleline: Boolean = false,
     placeholder: (@Composable () -> Unit)? = null,
-    focusColor: Color = Color.Transparent
+    focusColor: Color = Color.Transparent,
+    textStyle: TextStyle
 
 ) {
     OutlinedTextField(
@@ -34,6 +36,7 @@ fun TransparentTextField(
             focusedIndicatorColor = focusColor,
             unfocusedIndicatorColor = focusColor,
             disabledIndicatorColor = Color.Transparent,
-        )
+        ),
+        textStyle = textStyle
     )
 }

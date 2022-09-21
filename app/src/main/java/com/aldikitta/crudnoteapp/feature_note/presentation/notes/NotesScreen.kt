@@ -7,7 +7,6 @@ import androidx.compose.animation.core.FloatExponentialDecaySpec
 import androidx.compose.animation.core.animateDecay
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.R
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -32,6 +31,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
@@ -115,7 +115,6 @@ fun NotesScreen(
     ModalBottomSheetLayout(
         modifier = Modifier.fillMaxSize(),
         sheetBackgroundColor = MaterialTheme.colorScheme.background,
-        sheetShape = MaterialTheme.shapes.extraLarge,
         sheetState = sheetState,
         sheetContent = {
             Divider(
@@ -125,13 +124,20 @@ fun NotesScreen(
                     .padding(vertical = MaterialTheme.spacing.medium),
                 thickness = 4.dp
             )
+            Text(
+                text = "Sort type",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(MaterialTheme.spacing.small).fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
             OrderSection(
                 onOrderChange = { viewModel.onEvent(NotesEvent.Order(it)) },
                 noteOrder = state.noteOrder,
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.2f)
-                    .navigationBarsPadding(),
+                    .navigationBarsPadding()
             )
         }) {
         Scaffold(

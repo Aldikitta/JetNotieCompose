@@ -19,7 +19,7 @@ fun OrderSection(
     Column(modifier = modifier.padding(MaterialTheme.spacing.small)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-
+            horizontalArrangement = Arrangement.Center
         ) {
             ChipsOrderFilter(
                 selected = noteOrder is NoteOrder.Title,
@@ -38,7 +38,8 @@ fun OrderSection(
             )
         }
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
         ) {
             ChipsOrderFilter(
                 selected = noteOrder.orderType is OrderType.Ascending,

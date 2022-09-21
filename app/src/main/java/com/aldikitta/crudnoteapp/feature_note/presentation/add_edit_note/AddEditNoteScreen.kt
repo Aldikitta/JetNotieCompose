@@ -3,12 +3,12 @@ package com.aldikitta.crudnoteapp.feature_note.presentation.add_edit_note
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,7 +17,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -64,18 +63,10 @@ fun AddEditNoteScreen(
         }
     }
     Scaffold(
-//        floatingActionButton = {
-//            FloatingActionButton(
-//                onClick = { viewModel.onEvent(AddEditNoteEvent.SaveNote) },
-//                containerColor = noteBackgroundAnimateable.value
-//            ) {
-//                Icon(imageVector = Icons.Default.Save, contentDescription = "Save note")
-//            }
-//        },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = "Notes", fontWeight = FontWeight.Bold)
+                    Text(text = "New Notes", fontWeight = FontWeight.Bold)
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
@@ -86,8 +77,15 @@ fun AddEditNoteScreen(
                     TextButton(onClick = {
                         viewModel.onEvent(AddEditNoteEvent.SaveNote)
                     }) {
-                        Text(text = "Save", color = noteBackgroundAnimateable.value, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Medium)
+                        Text(
+                            text = "Save",
+                            color = noteBackgroundAnimateable.value,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Medium
+                        )
+
                     }
+
                 }
             )
         }
@@ -98,25 +96,45 @@ fun AddEditNoteScreen(
                 .padding(innerPadding)
                 .padding(MaterialTheme.spacing.small)
         ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Color",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Medium
+                )
+                Box(
+                    modifier = Modifier
+                        .size(MaterialTheme.spacing.large)
+                        .clip(CircleShape)
+                        .background(noteBackgroundAnimateable.value)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
             Text(
-                text = "Priority",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Medium
+                text = "Pick Note colors",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.outline
             )
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
             Row(
                 modifier = Modifier
                     .padding(vertical = MaterialTheme.spacing.small)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Note.noteColors.forEach { color ->
                     val colorInt = color.toArgb()
                     Box(modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = MaterialTheme.spacing.extraSmall)
-                        .size(MaterialTheme.spacing.mediumLarge)
-                        .clip(MaterialTheme.shapes.large)
+                        .padding(end = MaterialTheme.spacing.extraSmall)
+                        .size(MaterialTheme.spacing.extraLarge)
+                        .clip(CircleShape)
                         .background(color)
                         .clickable {
                             scope.launch {
@@ -127,32 +145,28 @@ fun AddEditNoteScreen(
                             }
                             viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
                         }
-                        .border(
-                            width = 3.dp,
-                            color = if (viewModel.noteColor.value == colorInt) {
-                                MaterialTheme.colorScheme.primary
-                            } else Color.Transparent,
-                            shape = RoundedCornerShape(MaterialTheme.spacing.medium)
-                        )
-                    )
+                    ) {
+                        if (viewModel.noteColor.value == colorInt) {
+                            Icon(
+                                imageVector = Icons.Rounded.Done,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .fillMaxSize()
+                                    .padding(MaterialTheme.spacing.small),
+                                tint = Color.White
+                            )
+                        }
+                    }
                 }
             }
-            Row(
-                modifier = Modifier
-                    .padding(vertical = MaterialTheme.spacing.small)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Date", style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Medium
-                )
-                Text(
-                    text = dayOfMonth, style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Medium
-                )
-            }
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+            Text(
+                text = dayOfMonth,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.outline
+            )
             TransparentTextField(
                 modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium),
                 text = titleState.text,
@@ -164,7 +178,8 @@ fun AddEditNoteScreen(
                 placeholder = {
                     Text(text = titleState.hint, style = MaterialTheme.typography.titleLarge)
                 },
-                focusColor = noteBackgroundAnimateable.value
+                focusColor = noteBackgroundAnimateable.value,
+                textStyle = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
             TransparentTextField(
@@ -177,7 +192,8 @@ fun AddEditNoteScreen(
                 focusColor = noteBackgroundAnimateable.value,
                 placeholder = {
                     Text(text = contentState.hint, style = MaterialTheme.typography.titleMedium)
-                }
+                },
+                textStyle = MaterialTheme.typography.titleMedium
             )
         }
     }

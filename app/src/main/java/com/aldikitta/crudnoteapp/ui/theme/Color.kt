@@ -21,7 +21,14 @@ val RedPink = Color(0xfffdbda1)
 val LightGreen = Color(0xff54e1b6)
 val Violet = Color(0xffaeb4fd)
 
-val BlueViolet1 = Color(0xffaeb4fd)
-val BlueViolet2 = Color(0xff9fa5fe)
-val BlueViolet3 = Color(0xff8f98fd)
+val Color1 = Color(0xffBEDCFA)
+val Color2 = Color(0xff98ACF8)
+val Color3 = Color(0xffB1B2FF)
+val Color4 = Color(0xffB088F9)
+val Color5 = Color(0xffDA9FF9)
+val Color6 = Color(0xffbee1e6)
+val Color7 = Color(0xfff0efeb)
+val Color8 = Color(0xffdfe7fd)
+val Color9 = Color(0xffcddafd)
+
 
