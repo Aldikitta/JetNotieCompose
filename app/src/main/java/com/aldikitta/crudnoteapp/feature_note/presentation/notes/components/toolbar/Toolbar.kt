@@ -1,35 +1,24 @@
 package com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.toolbar
 
-import android.text.format.DateFormat
 import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Sort
-import androidx.compose.material.icons.rounded.PrivacyTip
-import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
-import androidx.compose.ui.viewinterop.AndroidView
-import com.aldikitta.crudnoteapp.R
 import com.aldikitta.crudnoteapp.ui.theme.*
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
@@ -37,82 +26,27 @@ import java.util.*
 import kotlin.math.roundToInt
 
 private val ContentPadding = 8.dp
-private val Elevation = 4.dp
-private val ButtonSize = 24.dp
 private const val Alpha = 0.75f
 
 private val ExpandedPadding = 1.dp
 private val CollapsedPadding = 3.dp
 
-private val ExpandedCostaRicaHeight = 20.dp
-private val CollapsedCostaRicaHeight = 16.dp
-
 private val ExpandedWildlifeHeight = 80.dp
 private val CollapsedWildlifeHeight = 75.dp
 
-private val MapHeight = CollapsedCostaRicaHeight * 2
 
-//@Preview
-//@Composable
-//fun CollapsingToolbarCollapsedPreview() {
-//    CRUDNoteAppTheme {
-//        CollapsingToolbar(
-//            backgroundImageResId = R.drawable.toolbar_background,
-//            progress = 0f,
-//            onPrivacyTipButtonClicked = {},
-//            onSettingsButtonClicked = {},
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(80.dp)
-//        )
-//    }
-//}
-//
-//@Preview
-//@Composable
-//fun CollapsingToolbarHalfwayPreview() {
-//    CRUDNoteAppTheme {
-//        CollapsingToolbar(
-//            backgroundImageResId = R.drawable.toolbar_background,
-//            progress = 0.5f,
-//            onPrivacyTipButtonClicked = {},
-//            onSettingsButtonClicked = {},
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(120.dp)
-//        )
-//    }
-//}
-//
-//@Preview
-//@Composable
-//fun CollapsingToolbarExpandedPreview() {
-//    CRUDNoteAppTheme {
-//        CollapsingToolbar(
-//            backgroundImageResId = R.drawable.toolbar_background,
-//            progress = 1f,
-//            onPrivacyTipButtonClicked = {},
-//            onSettingsButtonClicked = {},
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(160.dp)
-//        )
-//    }
-//}
-
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CollapsingToolbar(
     progress: Float,
     onSortClicked: () -> Unit,
     onSearchClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    noteCount: Int
+    noteCount: Int,
+    sheetStateChecker: ModalBottomSheetState
 ) {
     val wildlifeHeight = with(LocalDensity.current) {
         lerp(CollapsedWildlifeHeight.toPx(), ExpandedWildlifeHeight.toPx(), progress).toDp()
-    }
-    val logoPadding = with(LocalDensity.current) {
-        lerp(CollapsedPadding.toPx(), ExpandedPadding.toPx(), progress).toDp()
     }
 
     val day = SimpleDateFormat("h:mm a")
@@ -186,7 +120,7 @@ fun CollapsingToolbar(
                 darkColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = progress * Alpha),
                 mediumColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = progress * Alpha),
                 lightColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = progress * Alpha),
-                )
+            )
 
             Box(
                 modifier = Modifier
@@ -261,10 +195,18 @@ fun CollapsingToolbar(
                         IconButton(
                             onClick = onSortClicked,
                         ) {
-                            Icon(
-                                imageVector = Icons.Filled.Sort,
-                                contentDescription = null,
-                            )
+                            if (sheetStateChecker.isVisible) {
+                                Icon(
+                                    imageVector = Icons.Filled.FilterList,
+                                    contentDescription = null,
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Filled.Sort,
+                                    contentDescription = null,
+                                )
+                            }
+
                         }
                         IconButton(
                             onClick = onSearchClicked,

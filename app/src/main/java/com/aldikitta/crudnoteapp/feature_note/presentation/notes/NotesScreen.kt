@@ -173,7 +173,8 @@ fun NotesScreen(
                         .statusBarsPadding()
                         .height(with(LocalDensity.current) { toolbarState.height.toDp() })
                         .graphicsLayer { translationY = toolbarState.offset },
-                    noteCount = getNoteCount
+                    noteCount = getNoteCount,
+                    sheetStateChecker = sheetState
                 )
             },
             floatingActionButton = {
