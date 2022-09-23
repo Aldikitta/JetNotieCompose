@@ -28,7 +28,6 @@ import com.aldikitta.crudnoteapp.ui.theme.spacing
 fun SearchScreen(
     navController: NavController,
     viewModel: NotesViewModel = hiltViewModel(),
-    note: Note? = null
 ) {
     val state = viewModel.tasksUiState
     Column(

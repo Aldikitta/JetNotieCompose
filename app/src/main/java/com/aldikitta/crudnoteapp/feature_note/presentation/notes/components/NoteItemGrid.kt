@@ -146,12 +146,6 @@ fun CustomStaggeredVerticalGrid(
         // on below line we are creating a variable for our column width.
         val columnWidth = (constraints.maxWidth / numColumns)
 
-        val MinToolbarHeight = 80.dp
-        val MaxToolbarHeight = 230.dp
-//        val toolbarHeightRange = with(LocalDensity.current) {
-//            MinToolbarHeight.roundToPx()..MaxToolbarHeight.roundToPx()
-//        }
-
         // on the below line we are creating and initializing our items constraint widget.
         val itemConstraints = constraints.copy(maxWidth = columnWidth)
 

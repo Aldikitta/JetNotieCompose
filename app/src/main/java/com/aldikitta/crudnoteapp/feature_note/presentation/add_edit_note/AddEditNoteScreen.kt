@@ -1,9 +1,9 @@
 package com.aldikitta.crudnoteapp.feature_note.presentation.add_edit_note
 
-import androidx.compose.animation.Animatable
+import android.content.res.Configuration
+import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
@@ -23,13 +24,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.aldikitta.crudnoteapp.feature_note.domain.model.Note
 import com.aldikitta.crudnoteapp.feature_note.presentation.add_edit_note.components.TransparentTextField
+import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesEvent
+import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesViewModel
 import com.aldikitta.crudnoteapp.ui.theme.spacing
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLifecycleComposeApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalLifecycleComposeApi::class,
+)
 @Composable
 fun AddEditNoteScreen(
     navController: NavController,
@@ -43,12 +48,17 @@ fun AddEditNoteScreen(
     val contentState by viewModel.noteContent.collectAsStateWithLifecycle()
     val noteColorState by viewModel.noteColor.collectAsStateWithLifecycle()
 
+    val noteScreenViewModel: NotesViewModel = hiltViewModel()
+    val noteState by noteScreenViewModel.state.collectAsStateWithLifecycle()
+
     val noteBackgroundAnimateable = remember {
         Animatable(
             Color((if (noteColor != -1) noteColor else noteColorState))
         )
     }
     val scope = rememberCoroutineScope()
+    var expanded by remember { mutableStateOf(false) }
+    val configuration = LocalConfiguration.current
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -96,66 +106,149 @@ fun AddEditNoteScreen(
                 .padding(innerPadding)
                 .padding(MaterialTheme.spacing.small)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Color",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Medium
-                )
-                Box(
-                    modifier = Modifier
-                        .size(MaterialTheme.spacing.large)
-                        .clip(CircleShape)
-                        .background(noteBackgroundAnimateable.value)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-            Text(
-                text = "Pick Note colors",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.outline
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-            Row(
-                modifier = Modifier
-                    .padding(vertical = MaterialTheme.spacing.small)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Note.noteColors.forEach { color ->
-                    val colorInt = color.toArgb()
-                    Box(modifier = Modifier
-                        .padding(end = MaterialTheme.spacing.extraSmall)
-                        .size(MaterialTheme.spacing.extraLarge)
-                        .clip(CircleShape)
-                        .background(color)
-                        .clickable {
-                            scope.launch {
-                                noteBackgroundAnimateable.animateTo(
-                                    targetValue = Color(colorInt),
-                                    animationSpec = tween(300)
-                                )
-                            }
-                            viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
-                        }
+            when (configuration.orientation) {
+                Configuration.ORIENTATION_LANDSCAPE -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        if (viewModel.noteColor.value == colorInt) {
-                            Icon(
-                                imageVector = Icons.Rounded.Done,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .fillMaxSize()
-                                    .padding(MaterialTheme.spacing.small),
-                                tint = Color.White
-                            )
+                        Text(
+                            text = "Pick Note colors",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Button(
+                            onClick = { expanded = true },
+                            colors = ButtonDefaults.buttonColors(containerColor = noteBackgroundAnimateable.value)
+                        ) {
+                            if (expanded) {
+                                Text(text = "Hide")
+                            } else {
+                                Text(text = "Show")
+                            }
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }) {
+                                Note.noteColors.forEach { color ->
+                                    val colorInt = color.toArgb()
+                                    DropdownMenuItem(
+                                        text = { /*TODO*/ },
+                                        onClick = {
+                                            scope.launch {
+                                                noteBackgroundAnimateable.animateTo(
+                                                    targetValue = Color(colorInt),
+                                                    animationSpec = tween(300)
+                                                )
+                                            }
+                                            viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
+                                        },
+                                        leadingIcon = {
+                                            Box(modifier = Modifier
+                                                .size(MaterialTheme.spacing.medium)
+                                                .clip(CircleShape)
+                                                .background(color)
+                                                .clickable {
+                                                    scope.launch {
+                                                        noteBackgroundAnimateable.animateTo(
+                                                            targetValue = Color(colorInt),
+                                                            animationSpec = tween(300)
+                                                        )
+                                                    }
+                                                    viewModel.onEvent(
+                                                        AddEditNoteEvent.ChangeColor(
+                                                            colorInt
+                                                        )
+                                                    )
+                                                }
+                                            )
+                                        },
+                                        trailingIcon = {
+                                            if (viewModel.noteColor.value == colorInt) {
+                                                Icon(
+                                                    imageVector = Icons.Rounded.Done,
+                                                    contentDescription = null,
+                                                    modifier = Modifier
+                                                        .fillMaxSize()
+                                                        .padding(MaterialTheme.spacing.small),
+                                                    tint = Color.White
+                                                )
+                                            }
+                                        }
+                                    )
+                                    Divider()
+                                }
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                }
+                else -> {
+                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Pick Note colors",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Button(
+                            onClick = { noteScreenViewModel.onEvent(NotesEvent.ToggleOrderSection) },
+                            colors = ButtonDefaults.buttonColors(containerColor = noteBackgroundAnimateable.value)
+                        ) {
+                            if (noteState.isOrderSectionVisible) {
+                                Text(text = "Hide")
+                            } else {
+                                Text(text = "Show")
+                            }
+
+                        }
+                    }
+                    AnimatedVisibility(
+                        visible = noteState.isOrderSectionVisible,
+                        enter = fadeIn() + slideInVertically(),
+                        exit = fadeOut() + slideOutVertically()
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(vertical = MaterialTheme.spacing.small)
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            Note.noteColors.forEach { color ->
+                                val colorInt = color.toArgb()
+                                Box(modifier = Modifier
+                                    .padding(end = MaterialTheme.spacing.extraSmall)
+                                    .size(MaterialTheme.spacing.extraLarge)
+                                    .clip(CircleShape)
+                                    .background(color)
+                                    .clickable {
+                                        scope.launch {
+                                            noteBackgroundAnimateable.animateTo(
+                                                targetValue = Color(colorInt),
+                                                animationSpec = tween(300)
+                                            )
+                                        }
+                                        viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
+                                    }
+                                ) {
+                                    if (viewModel.noteColor.value == colorInt) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.Done,
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .align(Alignment.Center)
+                                                .fillMaxSize()
+                                                .padding(MaterialTheme.spacing.small),
+                                            tint = Color.White
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }

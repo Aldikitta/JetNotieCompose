@@ -1,6 +1,7 @@
 package com.aldikitta.crudnoteapp.feature_note.presentation.notes
 
 import NoteItemGrid
+import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FloatExponentialDecaySpec
@@ -30,6 +31,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -81,6 +83,7 @@ fun NotesScreen(
     }
     val toolbarState = rememberToolbarState(toolbarHeightRange)
     val listState = rememberLazyListState()
+    val configuration = LocalConfiguration.current
 
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -98,7 +101,7 @@ fun NotesScreen(
                             initialValue = toolbarState.height + toolbarState.offset,
                             initialVelocity = available.y,
                             animationSpec = FloatExponentialDecaySpec()
-                        ) { value, velocity ->
+                        ) { value, _ ->
                             toolbarState.scrollTopLimitReached =
                                 listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
                             toolbarState.scrollOffset =
@@ -128,17 +131,33 @@ fun NotesScreen(
                 text = "Sort type",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(MaterialTheme.spacing.small).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(MaterialTheme.spacing.small)
+                    .fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
-            OrderSection(
-                onOrderChange = { viewModel.onEvent(NotesEvent.Order(it)) },
-                noteOrder = state.noteOrder,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.2f)
-                    .navigationBarsPadding()
-            )
+            when (configuration.orientation) {
+                Configuration.ORIENTATION_LANDSCAPE -> {
+                    OrderSection(
+                        onOrderChange = { viewModel.onEvent(NotesEvent.Order(it)) },
+                        noteOrder = state.noteOrder,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.5f)
+                            .navigationBarsPadding()
+                    )
+                }
+                else ->{
+                    OrderSection(
+                        onOrderChange = { viewModel.onEvent(NotesEvent.Order(it)) },
+                        noteOrder = state.noteOrder,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.2f)
+                            .navigationBarsPadding()
+                    )
+                }
+            }
         }) {
         Scaffold(
             modifier = Modifier.nestedScroll(nestedScrollConnection),
@@ -179,18 +198,18 @@ fun NotesScreen(
             }
         ) { innerPadding ->
             Column(modifier = Modifier.fillMaxSize()) {
-                AnimatedVisibility(
-                    modifier = Modifier.padding(innerPadding),
-                    visible = state.isOrderSectionVisible,
-                    enter = fadeIn() + slideInVertically(),
-                    exit = fadeOut() + slideOutVertically()
-                ) {
-                    OrderSection(
-                        onOrderChange = { viewModel.onEvent(NotesEvent.Order(it)) },
-                        noteOrder = state.noteOrder,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+//                AnimatedVisibility(
+//                    modifier = Modifier.padding(innerPadding),
+//                    visible = state.isOrderSectionVisible,
+//                    enter = fadeIn() + slideInVertically(),
+//                    exit = fadeOut() + slideOutVertically()
+//                ) {
+//                    OrderSection(
+//                        onOrderChange = { viewModel.onEvent(NotesEvent.Order(it)) },
+//                        noteOrder = state.noteOrder,
+//                        modifier = Modifier.fillMaxWidth()
+//                    )
+//                }
                 NoteItemGrid(
                     state = state,
                     paddingValues = innerPadding,

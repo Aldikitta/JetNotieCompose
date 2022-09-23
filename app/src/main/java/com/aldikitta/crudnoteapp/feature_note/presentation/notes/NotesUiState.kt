@@ -7,5 +7,5 @@ import com.aldikitta.crudnoteapp.feature_note.domain.util.OrderType
 data class NotesUiState(
     val notes: List<Note> = emptyList(),
     val noteOrder: NoteOrder = NoteOrder.Date(OrderType.Descending),
-    val isOrderSectionVisible: Boolean = false
+    val isOrderSectionVisible: Boolean = true
 )

@@ -108,9 +108,6 @@ fun CollapsingToolbar(
     modifier: Modifier = Modifier,
     noteCount: Int
 ) {
-    val costaRicaHeight = with(LocalDensity.current) {
-        lerp(CollapsedCostaRicaHeight.toPx(), ExpandedCostaRicaHeight.toPx(), progress).toDp()
-    }
     val wildlifeHeight = with(LocalDensity.current) {
         lerp(CollapsedWildlifeHeight.toPx(), ExpandedWildlifeHeight.toPx(), progress).toDp()
     }
