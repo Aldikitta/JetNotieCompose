@@ -173,35 +173,21 @@ fun CollapsingToolbar(
         )
 
         Box(modifier = Modifier.fillMaxSize()) {
-            //#region Background Image
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(shape = RoundedCornerShape(MaterialTheme.spacing.medium))
-                    .background(gradientGrayWhite)
-
-            )
-
-//            FeatureItem(
-//                modifier = modifier
-//                    .fillMaxSize(),
-//                darkColor = BlueViolet3.copy(alpha = progress * Alpha),
-//                mediumColor = BlueViolet2.copy(alpha = progress * Alpha),
-//                lightColor = BlueViolet1.copy(alpha = progress * Alpha),
-//
-//                )
-//            Image(
-//                painter = painterResource(id = R.drawable.toolbar_background),
-//                contentDescription = null,
-//                contentScale = ContentScale.FillWidth,
+//            Box(
 //                modifier = Modifier
 //                    .fillMaxSize()
-//                    .graphicsLayer {
-//                        alpha = progress * Alpha
-//                    },
-//                alignment = BiasAlignment(0f, 1f - ((1f - progress) * 0.75f))
+//                    .clip(shape = RoundedCornerShape(MaterialTheme.spacing.medium))
+//                    .background(gradientGrayWhite)
 //            )
-            //#endregion
+
+            FeatureItem(
+                modifier = modifier
+                    .fillMaxSize(),
+                darkColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = progress * Alpha),
+                mediumColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = progress * Alpha),
+                lightColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = progress * Alpha),
+                )
+
             Box(
                 modifier = Modifier
                     .statusBarsPadding()
@@ -213,9 +199,11 @@ fun CollapsingToolbar(
                         text = "All Notes ($noteCount)",
                         modifier = Modifier
                             .wrapContentWidth()
+                            .padding(start = MaterialTheme.spacing.small)
                             .graphicsLayer { alpha = ((0.25f - progress) * 4).coerceIn(0f, 1f) },
                         style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground,
                     )
 
                     Text(
@@ -226,8 +214,10 @@ fun CollapsingToolbar(
                                     maximumValue = 1f
                                 )
                             }
+                            .padding(start = MaterialTheme.spacing.small)
                             .wrapContentWidth(),
                         text = greeting,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold
                     )
@@ -239,15 +229,18 @@ fun CollapsingToolbar(
                                     maximumValue = 1f
                                 )
                             }
+                            .padding(start = MaterialTheme.spacing.small)
                             .wrapContentWidth(),
                         text = "You have $noteCount notes",
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Light
                     )
                     Text(
                         modifier = Modifier
-                            .padding(logoPadding)
+                            .padding(end = MaterialTheme.spacing.small)
                             .height(wildlifeHeight)
+
                             .graphicsLayer {
                                 alpha = ((progress - 0.5f) * 4).coerceIn(
                                     minimumValue = 0f,
@@ -257,6 +250,7 @@ fun CollapsingToolbar(
                             .wrapContentWidth(),
                         text = "$dayOfWeek,\r\n$dayOfMonth",
                         style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontWeight = FontWeight.Light,
                         textAlign = TextAlign.Center
                     )

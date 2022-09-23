@@ -1,11 +1,10 @@
 package com.aldikitta.crudnoteapp.feature_note.presentation.notes.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import com.aldikitta.crudnoteapp.feature_note.domain.util.NoteOrder
 import com.aldikitta.crudnoteapp.feature_note.domain.util.OrderType
 import com.aldikitta.crudnoteapp.ui.theme.spacing
@@ -19,64 +18,82 @@ fun OrderSection(
     Column(modifier = modifier.padding(MaterialTheme.spacing.small)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+//            horizontalArrangement = Arrangement.Center
         ) {
-            ChipsOrderFilter(
+            DefaultRadioButton(
+                text = "Title",
                 selected = noteOrder is NoteOrder.Title,
-                onClick = { onOrderChange(NoteOrder.Title(noteOrder.orderType)) },
-                title = "Title"
+                onSelect = { onOrderChange(NoteOrder.Title(noteOrder.orderType)) }
             )
-            ChipsOrderFilter(
+            DefaultRadioButton(
+                text = "Date",
                 selected = noteOrder is NoteOrder.Date,
-                onClick = { onOrderChange(NoteOrder.Date(noteOrder.orderType)) },
-                title = "Date"
+                onSelect = { onOrderChange(NoteOrder.Date(noteOrder.orderType)) }
             )
-            ChipsOrderFilter(
+            DefaultRadioButton(
+                text = "Color",
                 selected = noteOrder is NoteOrder.Color,
-                onClick = { onOrderChange(NoteOrder.Color(noteOrder.orderType)) },
-                title = "Color"
+                onSelect = { onOrderChange(NoteOrder.Color(noteOrder.orderType)) }
             )
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
         ) {
-            ChipsOrderFilter(
+            DefaultRadioButton(
+                text = "Ascending",
                 selected = noteOrder.orderType is OrderType.Ascending,
-                onClick = { onOrderChange(noteOrder.copy(OrderType.Ascending))},
-                title = "Ascending"
+                onSelect = { onOrderChange(noteOrder.copy(OrderType.Ascending)) }
             )
-            ChipsOrderFilter(
+            DefaultRadioButton(
+                text = "Descending",
                 selected = noteOrder.orderType is OrderType.Descending,
-                onClick = { onOrderChange(noteOrder.copy(OrderType.Descending))},
-                title = "Descending"
+                onSelect = { onOrderChange(noteOrder.copy(OrderType.Descending)) }
             )
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChipsOrderFilter(
+fun PortraitOrderSection(
     modifier: Modifier = Modifier,
-    selected: Boolean,
-    onClick: () -> Unit,
-    title: String,
+    noteOrder: NoteOrder = NoteOrder.Date(OrderType.Descending),
+    onOrderChange: (NoteOrder) -> Unit
 ) {
-    FilterChip(
-        modifier = modifier.padding(end = MaterialTheme.spacing.small),
-        selected = selected,
-        onClick = onClick,
-        label = {
-            Text(text = title)
-        },
-        leadingIcon = {
-            if (selected) {
-                Icon(
-                    imageVector = Icons.Filled.Done,
-                    contentDescription = "Localized Description",
-                )
-            }
-        }
-    )
+    Column(
+    ) {
+        DefaultRadioButton(
+            text = "Title",
+            selected = noteOrder is NoteOrder.Title,
+            onSelect = { onOrderChange(NoteOrder.Title(noteOrder.orderType)) }
+        )
+        DefaultRadioButton(
+            text = "Date",
+            selected = noteOrder is NoteOrder.Date,
+            onSelect = { onOrderChange(NoteOrder.Date(noteOrder.orderType)) }
+        )
+        DefaultRadioButton(
+            text = "Color",
+            selected = noteOrder is NoteOrder.Color,
+            onSelect = { onOrderChange(NoteOrder.Color(noteOrder.orderType)) }
+        )
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+        Text(
+            text = "Order by",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(MaterialTheme.spacing.medium)
+        )
+        DefaultRadioButton(
+            text = "Ascending",
+            selected = noteOrder.orderType is OrderType.Ascending,
+            onSelect = { onOrderChange(noteOrder.copy(OrderType.Ascending)) }
+        )
+        DefaultRadioButton(
+            text = "Descending",
+            selected = noteOrder.orderType is OrderType.Descending,
+            onSelect = { onOrderChange(noteOrder.copy(OrderType.Descending)) }
+        )
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+    }
 }

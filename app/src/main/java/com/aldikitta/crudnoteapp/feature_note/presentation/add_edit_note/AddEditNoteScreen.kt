@@ -104,7 +104,7 @@ fun AddEditNoteScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(MaterialTheme.spacing.small)
+                .padding(horizontal = MaterialTheme.spacing.medium)
         ) {
             when (configuration.orientation) {
                 Configuration.ORIENTATION_LANDSCAPE -> {
@@ -123,9 +123,9 @@ fun AddEditNoteScreen(
                             colors = ButtonDefaults.buttonColors(containerColor = noteBackgroundAnimateable.value)
                         ) {
                             if (expanded) {
-                                Text(text = "Hide")
+                                Text(text = "Hide", color = MaterialTheme.colorScheme.onPrimary,)
                             } else {
-                                Text(text = "Show")
+                                Text(text = "Show", color = MaterialTheme.colorScheme.onPrimary,)
                             }
                             DropdownMenu(
                                 expanded = expanded,

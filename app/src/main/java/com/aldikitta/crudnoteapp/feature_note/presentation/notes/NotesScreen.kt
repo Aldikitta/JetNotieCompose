@@ -1,22 +1,16 @@
 package com.aldikitta.crudnoteapp.feature_note.presentation.notes
 
-import NoteItemGrid
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.*
 import androidx.compose.animation.core.FloatExponentialDecaySpec
 import androidx.compose.animation.core.animateDecay
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -34,15 +28,15 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.aldikitta.crudnoteapp.feature_note.domain.model.Note
+import com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.NoteItemGrid
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.OrderSection
+import com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.PortraitOrderSection
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.toolbar.CollapsingToolbar
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.toolbar.ExitUntilCollapsedState
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.toolbar.ToolbarState
@@ -128,14 +122,13 @@ fun NotesScreen(
                 thickness = 4.dp
             )
             Text(
-                text = "Sort type",
+                text = "Sort by",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .padding(MaterialTheme.spacing.small)
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center
+                    .padding(MaterialTheme.spacing.medium)
             )
+
             when (configuration.orientation) {
                 Configuration.ORIENTATION_LANDSCAPE -> {
                     OrderSection(
@@ -148,7 +141,7 @@ fun NotesScreen(
                     )
                 }
                 else ->{
-                    OrderSection(
+                    PortraitOrderSection(
                         onOrderChange = { viewModel.onEvent(NotesEvent.Order(it)) },
                         noteOrder = state.noteOrder,
                         modifier = Modifier
@@ -166,7 +159,6 @@ fun NotesScreen(
                 CollapsingToolbar(
                     progress = toolbarState.progress,
                     onSortClicked = {
-//                    viewModel.onEvent(NotesEvent.ToggleOrderSection)
                         scope.launch {
                             if (sheetState.isVisible) {
                                 sheetState.hide()
@@ -197,19 +189,7 @@ fun NotesScreen(
                 }
             }
         ) { innerPadding ->
-            Column(modifier = Modifier.fillMaxSize()) {
-//                AnimatedVisibility(
-//                    modifier = Modifier.padding(innerPadding),
-//                    visible = state.isOrderSectionVisible,
-//                    enter = fadeIn() + slideInVertically(),
-//                    exit = fadeOut() + slideOutVertically()
-//                ) {
-//                    OrderSection(
-//                        onOrderChange = { viewModel.onEvent(NotesEvent.Order(it)) },
-//                        noteOrder = state.noteOrder,
-//                        modifier = Modifier.fillMaxWidth()
-//                    )
-//                }
+            Column(modifier = Modifier.fillMaxSize().padding(MaterialTheme.spacing.small)) {
                 NoteItemGrid(
                     state = state,
                     paddingValues = innerPadding,
