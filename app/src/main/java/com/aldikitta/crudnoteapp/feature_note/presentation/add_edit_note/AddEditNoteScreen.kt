@@ -18,6 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -118,7 +120,7 @@ fun AddEditNoteScreen(
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Medium
                         )
-                        Button(
+                        OutlinedButton(
                             onClick = { expanded = true },
                             colors = ButtonDefaults.buttonColors(containerColor = noteBackgroundAnimateable.value)
                         ) {
@@ -195,9 +197,9 @@ fun AddEditNoteScreen(
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Medium
                         )
-                        Button(
+                        OutlinedButton(
                             onClick = { noteScreenViewModel.onEvent(NotesEvent.ToggleOrderSection) },
-                            colors = ButtonDefaults.buttonColors(containerColor = noteBackgroundAnimateable.value)
+                            border = BorderStroke(width = ButtonDefaults.outlinedButtonBorder.width, color = noteBackgroundAnimateable.value),
                         ) {
                             if (noteState.isOrderSectionVisible) {
                                 Text(text = "Hide")
@@ -223,7 +225,7 @@ fun AddEditNoteScreen(
                                 val colorInt = color.toArgb()
                                 Box(modifier = Modifier
                                     .padding(end = MaterialTheme.spacing.extraSmall)
-                                    .size(MaterialTheme.spacing.extraLarge)
+                                    .size(MaterialTheme.spacing.mediumLarge)
                                     .clip(CircleShape)
                                     .background(color)
                                     .clickable {

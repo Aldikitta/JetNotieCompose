@@ -1,6 +1,5 @@
 package com.aldikitta.crudnoteapp.feature_note.presentation.search
 
-import NoteItemGrid
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -21,6 +20,7 @@ import androidx.navigation.NavController
 import com.aldikitta.crudnoteapp.feature_note.domain.model.Note
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesEvent
 import com.aldikitta.crudnoteapp.feature_note.presentation.notes.NotesViewModel
+import com.aldikitta.crudnoteapp.feature_note.presentation.notes.components.NoteItemGrid
 import com.aldikitta.crudnoteapp.ui.theme.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,7 +57,7 @@ fun SearchScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .focusRequester(focusRequester)
-                    .padding(horizontal = MaterialTheme.spacing.small),
+                    .padding(end = MaterialTheme.spacing.medium),
                 singleLine = true,
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = MaterialTheme.colorScheme.inverseOnSurface,
@@ -78,7 +78,7 @@ fun SearchScreen(
         }
         NoteItemGrid(
             state = state,
-            paddingValues = PaddingValues(top = MaterialTheme.spacing.small),
+            paddingValues = PaddingValues(MaterialTheme.spacing.small),
             navController,
         )
     }
