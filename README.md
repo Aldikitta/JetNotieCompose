@@ -1,8 +1,17 @@
-<p align="center"><img src="screenshots/summary.png" alt="Movplay"></p>
-
 # Notie
 Lightweight, performant, simplified and beautiful note app. Design especially for taking note to keep and record all your note in one place.
 
+### In app features:
+* Create, Read, Update and Delete Notes
+* Real time search notes
+* Mark notes with individuals colors
+* Sort notes based on date, title and color
+* Order notes ASCENDING/DESCENDING
+* Collapsing toolbar based on scroll behaviour
+* Support Dynamic Theme Android 12+
+* Support dark theme and light theme (based on system theme)
+* Small size app release (2.3 MB)
+* Using all of latest tecnhology from Android team and follow its best practices
 
 ### Structural design pattern
 The app is built with the Model-View-ViewModel (MVVM) is its structural design pattern that separates objects into three distinct groups:
