@@ -1,7 +1,7 @@
 <p align="center"><img src="screenshots/summary.png" alt="Movplay"></p>
 
 # Notie
-This is the version 3 (Final) of An Android app built with Jetpack Compose consuming [TMDB API](https://www.themoviedb.org/documentation/api) to help users to have current information of the trending, popular, upcoming many other films.
+Lightweight, performant, simplified and beautiful note app. Design especially for taking note to keep and record all your note in one place.
 
 
 ### Structural design pattern
