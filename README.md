@@ -11,7 +11,7 @@ Lightweight, performant, simplified and beautiful note app. Design especially fo
 * Support Dynamic Theme Android 12+
 * Support dark theme and light theme (based on system theme)
 * Small size app release (2.3 MB)
-* Using all of latest tecnhology from Android team and follow its best practices
+* Using all of the latest technology from Android team and follow its best practices
 
 ### Structural design pattern
 The app is built with the Model-View-ViewModel (MVVM) is its structural design pattern that separates objects into three distinct groups:
